@@ -62,7 +62,7 @@ public class SearchMemberUnitTest
 
         var client = new GameApiClient(fakeLog, fakeCryptographyUtensil, fakeHttpClient);
 
-        var atual = await client
+        var actual = await client
             .SearchMemberAsync(
                 apiUrl,
                 agentCode,
@@ -71,10 +71,10 @@ public class SearchMemberUnitTest
                 memberAccount)
             .ConfigureAwait(false);
 
-        Assert.NotNull(atual);
-        Assert.True(atual.IsPlayerExist);
-        Assert.False(atual.Online);
-        Assert.Equal(1.0m, atual.Balance);
+        Assert.NotNull(actual);
+        Assert.True(actual.IsPlayerExist);
+        Assert.False(actual.Online);
+        Assert.Equal(1.0m, actual.Balance);
     }
 
     [Fact]
@@ -128,7 +128,7 @@ public class SearchMemberUnitTest
 
         var client = new GameApiClient(fakeLog, fakeCryptographyUtensil, fakeHttpClient);
 
-        var atual = await client
+        var actual = await client
             .SearchMemberAsync(
                 apiUrl,
                 agentCode,
@@ -137,8 +137,8 @@ public class SearchMemberUnitTest
                 memberAccount)
             .ConfigureAwait(false);
 
-        Assert.NotNull(atual);
-        Assert.False(atual.IsPlayerExist);
+        Assert.NotNull(actual);
+        Assert.False(actual.IsPlayerExist);
     }
 
     [Fact]
@@ -195,7 +195,7 @@ public class SearchMemberUnitTest
 
         var client = new GameApiClient(fakeLog, fakeCryptographyUtensil, fakeHttpClient);
 
-        var atual = await client
+        var actual = await client
             .SearchMemberAsync(
                 apiUrl,
                 agentCode,
@@ -204,9 +204,9 @@ public class SearchMemberUnitTest
                 memberAccount)
             .ConfigureAwait(false);
 
-        Assert.NotNull(atual);
-        Assert.True(atual.IsPlayerExist);
-        Assert.True(atual.Online);
-        Assert.Equal(1.0m, atual.Balance);
+        Assert.NotNull(actual);
+        Assert.True(actual.IsPlayerExist);
+        Assert.True(actual.Online);
+        Assert.Equal(1.0m, actual.Balance);
     }
 }

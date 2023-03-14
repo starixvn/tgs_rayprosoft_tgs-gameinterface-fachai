@@ -110,7 +110,7 @@ public class GetRecordListUnitTest
 
         var client = new GameApiClient(fakeLog, fakeCryptographyUtensil, fakeHttpClient);
 
-        var atual = await client
+        var actual = await client
             .GetRecordListAsync(
                 apiUrl,
                 agentCode,
@@ -122,7 +122,7 @@ public class GetRecordListUnitTest
             .ConfigureAwait(false)
             ?? Enumerable.Empty<RecordResult>();
 
-        Assert.NotNull(atual);
-        Assert.True(atual.Any());
+        Assert.NotNull(actual);
+        Assert.True(actual.Any());
     }
 }

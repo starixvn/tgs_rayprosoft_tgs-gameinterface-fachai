@@ -30,11 +30,11 @@ public class FundStatusGetServiceUnitTest
         var client = new FundStatusGetService(
             fakeGameApiClient);
 
-        var atual = await client
+        var actual = await client
             .GetAsync(
                query)
            .ConfigureAwait(false);
 
-        Assert.True(atual);
+        Assert.True(actual);
     }
 }

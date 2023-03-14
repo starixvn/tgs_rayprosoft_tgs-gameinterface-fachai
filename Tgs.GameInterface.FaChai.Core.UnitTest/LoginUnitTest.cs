@@ -64,7 +64,7 @@ public class LoginUnitTest
 
         var client = new GameApiClient(fakeLog, fakeCryptographyUtensil, fakeHttpClient);
 
-        var atual = await client
+        var actual = await client
             .LoginAsync(
                 apiUrl,
                 agentCode,
@@ -75,9 +75,6 @@ public class LoginUnitTest
                 languageID)
             .ConfigureAwait(false);
 
-        Assert.NotNull(atual);
-        //Assert.True(atual.IsPlayerExist);
-        //Assert.False(atual.Online);
-        //Assert.Equal(1.0m, atual.Balance);
+        Assert.NotNull(actual);
     }
 }

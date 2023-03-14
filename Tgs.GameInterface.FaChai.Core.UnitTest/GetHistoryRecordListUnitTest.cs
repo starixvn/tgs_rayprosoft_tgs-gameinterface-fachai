@@ -110,7 +110,7 @@ public class GetHistoryRecordListUnitTest
 
         var client = new GameApiClient(fakeLog, fakeCryptographyUtensil, fakeHttpClient);
 
-        var atual = await client
+        var actual = await client
             .GetHistoryRecordListAsync(
                 apiUrl,
                 agentCode,
@@ -122,8 +122,8 @@ public class GetHistoryRecordListUnitTest
             .ConfigureAwait(false)
             ?? Enumerable.Empty<RecordResult>();
 
-        Assert.NotNull(atual);
-        Assert.True(atual.Any());
+        Assert.NotNull(actual);
+        Assert.True(actual.Any());
     }
 
     [Fact]
@@ -179,7 +179,7 @@ public class GetHistoryRecordListUnitTest
 
         var client = new GameApiClient(fakeLog, fakeCryptographyUtensil, fakeHttpClient);
 
-        var atual = await client
+        var actual = await client
             .GetHistoryRecordListAsync(
                 apiUrl,
                 agentCode,
@@ -191,7 +191,7 @@ public class GetHistoryRecordListUnitTest
             .ConfigureAwait(false)
             ?? Enumerable.Empty<RecordResult>();
 
-        Assert.NotNull(atual);
-        Assert.False(atual.Any());
+        Assert.NotNull(actual);
+        Assert.False(actual.Any());
     }
 }

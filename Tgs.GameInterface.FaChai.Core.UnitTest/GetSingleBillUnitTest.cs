@@ -59,7 +59,7 @@ public class GetSingleBillUnitTest
 
         var client = new GameApiClient(fakeLog, fakeCryptographyUtensil, fakeHttpClient);
 
-        var atual = await client
+        var actual = await client
             .GetSingleBillAsync(
                 apiUrl,
                 agentCode,
@@ -68,7 +68,7 @@ public class GetSingleBillUnitTest
                 trsId)
             .ConfigureAwait(false);
 
-        Assert.False(atual);
+        Assert.False(actual);
     }
 
     [Fact]
@@ -134,7 +134,7 @@ public class GetSingleBillUnitTest
 
         var client = new GameApiClient(fakeLog, fakeCryptographyUtensil, fakeHttpClient);
 
-        var atual = await client
+        var actual = await client
             .GetSingleBillAsync(
                 apiUrl,
                 agentCode,
@@ -143,7 +143,7 @@ public class GetSingleBillUnitTest
                 trsId)
             .ConfigureAwait(false);
 
-        Assert.True(atual);
+        Assert.True(actual);
     }
 
     [Fact]

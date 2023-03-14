@@ -50,12 +50,12 @@ public class FundOutGetServiceUnitTest
             fakeSnowflakeUtensil,
             fakeGameApiClient);
 
-        var atual = await client
+        var actual = await client
             .GetAsync(
                query)
            .ConfigureAwait(false);
 
-        Assert.NotNull(atual);
-        Assert.Equal(trsId.ToString(), atual.TrsId);
+        Assert.NotNull(actual);
+        Assert.Equal(trsId.ToString(), actual.TrsId);
     }
 }
