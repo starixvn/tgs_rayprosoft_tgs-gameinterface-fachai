@@ -17,7 +17,7 @@
       "applicationUrl": "http://localhost:5020",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "OTEL_SERVICE_NAME": "VipLevel-Command(local)",
+        "OTEL_SERVICE_NAME": "Game-GameInterface-FaChai(local)",
         "NODE_IP": "otel.rpgp.cc",
         "POD_IP": "127.0.0.1"
       }
@@ -30,7 +30,7 @@
       "applicationUrl": "https://localhost:7256;http://localhost:5020",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "OTEL_SERVICE_NAME": "VipLevel-Command(local)",
+        "OTEL_SERVICE_NAME": "Game-GameInterface-FaChai(local)",
         "NODE_IP": "otel.rpgp.cc",
         "POD_IP": "127.0.0.1"
       }
