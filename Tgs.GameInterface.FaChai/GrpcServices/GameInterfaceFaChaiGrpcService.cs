@@ -147,7 +147,7 @@ namespace Tgs.GameInterface.FaChai.GrpcServices
 
             var reply = new GameRecordReply();
 
-            if (!results.Any())
+            if (results.Any())
             {
                 foreach (var result in results)
                 {
@@ -191,7 +191,7 @@ namespace Tgs.GameInterface.FaChai.GrpcServices
 
             var reply = new GameRecordReply();
 
-            if (!results.Any())
+            if (results.Any())
             {
                 foreach (var result in results)
                 {
