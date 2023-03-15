@@ -4,6 +4,10 @@ namespace Tgs.GameInterface.FaChai.Client;
 
 public interface IGameInterfaceFaChaiClient
 {
+    ValueTask<string> CheckingServiceAsync(
+        string machineName,
+        CancellationToken cancellationToken = default);
+
     ValueTask<FundReply> FundInAsync(
         Uri apiUrl,
         string agentCode,
@@ -30,7 +34,7 @@ public interface IGameInterfaceFaChaiClient
         string trsId,
         CancellationToken cancellationToken = default);
 
-    IAsyncEnumerable<GameRecord> GameRecordAsync(
+    IAsyncEnumerable<GameRecordInfo> GameRecordAsync(
         Uri apiUrl,
         string agentCode,
         string agentKey,
@@ -39,7 +43,7 @@ public interface IGameInterfaceFaChaiClient
         DateTimeOffset endDate,
         CancellationToken cancellationToken = default);
 
-    IAsyncEnumerable<GameRecord> GameRecordHistoryAsync(
+    IAsyncEnumerable<GameRecordInfo> GameRecordHistoryAsync(
         Uri apiUrl,
         string agentCode,
         string agentKey,
