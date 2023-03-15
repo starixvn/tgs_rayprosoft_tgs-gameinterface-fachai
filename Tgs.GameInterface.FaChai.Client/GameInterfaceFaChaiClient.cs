@@ -13,6 +13,24 @@ internal class GameInterfaceFaChaiClient : IGameInterfaceFaChaiClient
         _client = client ?? throw new ArgumentNullException(nameof(client));
     }
 
+    public async ValueTask<string> CheckingServiceAsync(
+        string machineName,
+        CancellationToken cancellationToken = default)
+    {
+        var request = new CheckingServiceRequest
+        {
+            MachineName = machineName,
+        };
+
+        var reply = await _client
+            .CheckingServiceAsync(
+                request: request,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        return reply.MachineName;
+    }
+
     public async ValueTask<FundReply> FundInAsync(
         Uri apiUrl,
         string agentCode,
@@ -80,7 +98,7 @@ internal class GameInterfaceFaChaiClient : IGameInterfaceFaChaiClient
         return reply.State;
     }
 
-    public async IAsyncEnumerable<GameRecord> GameRecordAsync(
+    public async IAsyncEnumerable<GameRecordInfo> GameRecordAsync(
         Uri apiUrl,
         string agentCode,
         string agentKey,
@@ -104,7 +122,7 @@ internal class GameInterfaceFaChaiClient : IGameInterfaceFaChaiClient
         .ConfigureAwait(false);
 
         var gameRecords = reply.Items
-            ?? Enumerable.Empty<GameRecord>();
+            ?? Enumerable.Empty<GameRecordInfo>();
 
         if (!gameRecords.Any())
         {
@@ -117,7 +135,7 @@ internal class GameInterfaceFaChaiClient : IGameInterfaceFaChaiClient
         }
     }
 
-    public async IAsyncEnumerable<GameRecord> GameRecordHistoryAsync(
+    public async IAsyncEnumerable<GameRecordInfo> GameRecordHistoryAsync(
         Uri apiUrl,
         string agentCode,
         string agentKey,
@@ -141,7 +159,7 @@ internal class GameInterfaceFaChaiClient : IGameInterfaceFaChaiClient
         .ConfigureAwait(false);
 
         var gameRecords = reply.Items
-            ?? Enumerable.Empty<GameRecord>();
+            ?? Enumerable.Empty<GameRecordInfo>();
 
         if (!gameRecords.Any())
         {
