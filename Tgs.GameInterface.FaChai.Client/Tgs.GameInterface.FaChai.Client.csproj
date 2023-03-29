@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>0.0.2</Version>
+		<Version>0.0.3</Version>
 		<Authors>Raypro</Authors>
 		<RootNamespace>Tgs.GameInterface.FaChai.Client</RootNamespace>
 		<PackageId>Tgs.GameInterface.FaChai.Client</PackageId>
