@@ -109,12 +109,7 @@ builder.Services
     .AddInterceptionService()
     .AddServiceUtiltiyInterceptors();
 
-builder.Services
-    .AddInterceptionService()
-    .AddServiceUtiltiyInterceptors();
-
-builder.Services
-    .AddHealthChecks();
+builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 
