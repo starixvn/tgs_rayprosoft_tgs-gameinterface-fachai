@@ -62,14 +62,12 @@ public class SearchMemberUnitTest
 
         var client = new GameApiClient(fakeLog, fakeCryptographyUtensil, fakeHttpClient);
 
-        var actual = await client
-            .SearchMemberAsync(
-                apiUrl,
-                agentCode,
-                agentKey,
-                currency,
-                memberAccount)
-            .ConfigureAwait(false);
+        var actual = await client.SearchMemberAsync(
+            apiUrl: apiUrl,
+            agentCode: agentCode,
+            agentKey: agentKey,
+            currency: currency,
+            memberAccount: memberAccount);
 
         Assert.NotNull(actual);
         Assert.True(actual.IsPlayerExist);
@@ -128,14 +126,12 @@ public class SearchMemberUnitTest
 
         var client = new GameApiClient(fakeLog, fakeCryptographyUtensil, fakeHttpClient);
 
-        var actual = await client
-            .SearchMemberAsync(
-                apiUrl,
-                agentCode,
-                agentKey,
-                currency,
-                memberAccount)
-            .ConfigureAwait(false);
+        var actual = await client.SearchMemberAsync(
+            apiUrl: apiUrl,
+            agentCode: agentCode,
+            agentKey: agentKey,
+            currency: currency,
+            memberAccount: memberAccount);
 
         Assert.NotNull(actual);
         Assert.False(actual.IsPlayerExist);
@@ -195,14 +191,12 @@ public class SearchMemberUnitTest
 
         var client = new GameApiClient(fakeLog, fakeCryptographyUtensil, fakeHttpClient);
 
-        var actual = await client
-            .SearchMemberAsync(
-                apiUrl,
-                agentCode,
-                agentKey,
-                currency,
-                memberAccount)
-            .ConfigureAwait(false);
+        var actual = await client.SearchMemberAsync(
+            apiUrl: apiUrl,
+            agentCode: agentCode,
+            agentKey: agentKey,
+            currency: currency,
+            memberAccount: memberAccount);
 
         Assert.NotNull(actual);
         Assert.True(actual.IsPlayerExist);

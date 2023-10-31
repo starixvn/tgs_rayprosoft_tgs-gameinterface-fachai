@@ -68,16 +68,14 @@ public class WithdrawalUnitTest
 
         var client = new GameApiClient(fakeLog, fakeCryptographyUtensil, fakeHttpClient);
 
-        var actual = await client
-            .WithdrawalAsync(
-                apiUrl,
-                agentCode,
-                agentKey,
-                currency,
-                memberAccount,
-                trsId,
-                amount)
-            .ConfigureAwait(false);
+        var actual = await client.WithdrawalAsync(
+            apiUrl: apiUrl,
+            agentCode: agentCode,
+            agentKey: agentKey,
+            currency: currency,
+            memberAccount: memberAccount,
+            trsId: trsId,
+            amount: amount);
 
         Assert.NotNull(actual);
         Assert.Equal(trsId, actual.TrsId);

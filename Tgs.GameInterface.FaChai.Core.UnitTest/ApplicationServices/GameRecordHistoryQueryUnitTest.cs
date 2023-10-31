@@ -22,11 +22,9 @@ public class GameRecordHistoryQueryUnitTest
         var client = new GameRecordHistoryQueryService(
             fakeGameApiClient);
 
-        _ = await client
-            .QueryAsync(
-               query)
+        _ = await client.QueryAsync(
+            query)
             .ToArrayAsync()
-            .ConfigureAwait(false)
             ?? Enumerable.Empty<GameRecordResult>();
 
         _ = await fakeGameApiClient
@@ -40,7 +38,6 @@ public class GameRecordHistoryQueryUnitTest
                  Arg.Is(query.EndDate),
                  Arg.Any<CancellationToken>())
             .ToArrayAsync()
-            .ConfigureAwait(false)
             ?? Enumerable.Empty<RecordResult>();
     }
 }

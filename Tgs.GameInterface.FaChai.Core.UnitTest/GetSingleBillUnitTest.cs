@@ -59,14 +59,12 @@ public class GetSingleBillUnitTest
 
         var client = new GameApiClient(fakeLog, fakeCryptographyUtensil, fakeHttpClient);
 
-        var actual = await client
-            .GetSingleBillAsync(
-                apiUrl,
-                agentCode,
-                agentKey,
-                currency,
-                trsId)
-            .ConfigureAwait(false);
+        var actual = await client.GetSingleBillAsync(
+            apiUrl: apiUrl,
+            agentCode: agentCode,
+            agentKey: agentKey,
+            currency: currency,
+            trsId: trsId);
 
         Assert.False(actual);
     }
@@ -134,14 +132,12 @@ public class GetSingleBillUnitTest
 
         var client = new GameApiClient(fakeLog, fakeCryptographyUtensil, fakeHttpClient);
 
-        var actual = await client
-            .GetSingleBillAsync(
-                apiUrl,
-                agentCode,
-                agentKey,
-                currency,
-                trsId)
-            .ConfigureAwait(false);
+        var actual = await client.GetSingleBillAsync(
+            apiUrl: apiUrl,
+            agentCode: agentCode,
+            agentKey: agentKey,
+            currency: currency,
+            trsId: trsId);
 
         Assert.True(actual);
     }
@@ -197,13 +193,12 @@ public class GetSingleBillUnitTest
 
         var client = new GameApiClient(fakeLog, fakeCryptographyUtensil, fakeHttpClient);
 
-        _ = await Assert.ThrowsAsync<Exception>(async () => await client
-           .GetSingleBillAsync(
-               apiUrl,
-               agentCode,
-               agentKey,
-               currency,
-               trsId))
-            .ConfigureAwait(false);
+        _ = await Assert.ThrowsAsync<Exception>(
+            async () => await client.GetSingleBillAsync(
+                apiUrl: apiUrl,
+                agentCode: agentCode,
+                agentKey: agentKey,
+                currency: currency,
+                trsId: trsId));
     }
 }

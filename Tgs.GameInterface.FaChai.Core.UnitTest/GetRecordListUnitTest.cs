@@ -110,16 +110,14 @@ public class GetRecordListUnitTest
 
         var client = new GameApiClient(fakeLog, fakeCryptographyUtensil, fakeHttpClient);
 
-        var actual = await client
-            .GetRecordListAsync(
-                apiUrl,
-                agentCode,
-                agentKey,
-                currency,
-                startDate,
-                endDate)
+        var actual = await client.GetRecordListAsync(
+            apiUrl: apiUrl,
+            agentCode: agentCode,
+            agentKey: agentKey,
+            currency: currency,
+            startDate: startDate,
+            endDate: endDate)
             .ToArrayAsync()
-            .ConfigureAwait(false)
             ?? Enumerable.Empty<RecordResult>();
 
         Assert.NotNull(actual);

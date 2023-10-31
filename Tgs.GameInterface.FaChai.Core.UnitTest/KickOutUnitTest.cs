@@ -59,13 +59,11 @@ public class KickOutUnitTest
 
         var client = new GameApiClient(fakeLog, fakeCryptographyUtensil, fakeHttpClient);
 
-        await client
-            .KickOutAsync(
-                apiUrl,
-                agentCode,
-                agentKey,
-                currency,
-                memberAccount)
-            .ConfigureAwait(false);
+        await client.KickOutAsync(
+            apiUrl: apiUrl,
+            agentCode: agentCode,
+            agentKey: agentKey,
+            currency: currency,
+            memberAccount: memberAccount);
     }
 }

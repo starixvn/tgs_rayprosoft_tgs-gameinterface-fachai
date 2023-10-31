@@ -22,22 +22,18 @@ public class GameUrlGetServiceUnitTest
         var client = new GameUrlGetService(
             fakeGameApiClient);
 
-        _ = await client
-            .GetAsync(
-               query)
-           .ConfigureAwait(false);
+        _ = await client.GetAsync(query);
 
         _ = await fakeGameApiClient
             .Received(1)
             .LoginAsync(
-                Arg.Is(query.ApiUrl),
-                Arg.Is(query.AgentCode),
-                Arg.Is(query.AgentKey),
-                Arg.Is(query.Currency),
-                Arg.Is(query.PlayerCode),
-                Arg.Is(query.GameId),
-                Arg.Is(query.LanguageId),
-                Arg.Any<CancellationToken>())
-            .ConfigureAwait(false);
+            Arg.Is(query.ApiUrl),
+            Arg.Is(query.AgentCode),
+            Arg.Is(query.AgentKey),
+            Arg.Is(query.Currency),
+            Arg.Is(query.PlayerCode),
+            Arg.Is(query.GameId),
+            Arg.Is(query.LanguageId),
+            Arg.Any<CancellationToken>());
     }
 }

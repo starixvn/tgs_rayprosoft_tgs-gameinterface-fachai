@@ -22,25 +22,22 @@ public class GameRecordQueryUnitTest
         var client = new GameRecordQueryService(
             fakeGameApiClient);
 
-        _ = await client
-            .QueryAsync(
-               query)
+        _ = await client.QueryAsync(
+            query)
             .ToArrayAsync()
-            .ConfigureAwait(false)
             ?? Enumerable.Empty<GameRecordResult>();
 
         _ = await fakeGameApiClient
             .Received(1)
             .GetRecordListAsync(
-                 Arg.Is(query.ApiUrl),
-                 Arg.Is(query.AgentCode),
-                 Arg.Is(query.AgentKey),
-                 Arg.Is(query.Currency),
-                 Arg.Is(query.StartDate),
-                 Arg.Is(query.EndDate),
-                 Arg.Any<CancellationToken>())
+            Arg.Is(query.ApiUrl),
+            Arg.Is(query.AgentCode),
+            Arg.Is(query.AgentKey),
+            Arg.Is(query.Currency),
+            Arg.Is(query.StartDate),
+            Arg.Is(query.EndDate),
+            Arg.Any<CancellationToken>())
             .ToArrayAsync()
-            .ConfigureAwait(false)
             ?? Enumerable.Empty<RecordResult>();
     }
 }

@@ -59,14 +59,12 @@ public class AddMemberUnitTest
 
         var client = new GameApiClient(fakeLog, fakeCryptographyUtensil, fakeHttpClient);
 
-        await client
-            .AddMemberAsync(
-                apiUrl,
-                agentCode,
-                agentKey,
-                currency,
-                memberAccount)
-            .ConfigureAwait(false);
+        await client.AddMemberAsync(
+            apiUrl,
+            agentCode,
+            agentKey,
+            currency,
+            memberAccount);
     }
 
     [Fact]
@@ -120,13 +118,11 @@ public class AddMemberUnitTest
 
         var client = new GameApiClient(fakeLog, fakeCryptographyUtensil, fakeHttpClient);
 
-        await client
-            .AddMemberAsync(
-                apiUrl,
-                agentCode,
-                agentKey,
-                currency,
-                memberAccount)
-            .ConfigureAwait(false);
+        await client.AddMemberAsync(
+            apiUrl,
+            agentCode,
+            agentKey,
+            currency,
+            memberAccount);
     }
 }

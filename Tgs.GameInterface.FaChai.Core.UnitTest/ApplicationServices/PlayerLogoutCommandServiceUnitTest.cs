@@ -20,20 +20,16 @@ public class PlayerLogoutCommandServiceUnitTest
         var client = new PlayerLogoutCommandService(
             fakeGameApiClient);
 
-        await client
-           .ExecuteAsync(
-              command)
-          .ConfigureAwait(false);
+        await client.ExecuteAsync(command);
 
         await fakeGameApiClient
            .Received(1)
            .KickOutAsync(
-               Arg.Is(command.ApiUrl),
-               Arg.Is(command.AgentCode),
-               Arg.Is(command.AgentKey),
-               Arg.Is(command.Currency),
-               Arg.Is(command.PlayerCode),
-               Arg.Any<CancellationToken>())
-           .ConfigureAwait(false);
+            Arg.Is(command.ApiUrl),
+            Arg.Is(command.AgentCode),
+            Arg.Is(command.AgentKey),
+            Arg.Is(command.Currency),
+            Arg.Is(command.PlayerCode),
+            Arg.Any<CancellationToken>());
     }
 }

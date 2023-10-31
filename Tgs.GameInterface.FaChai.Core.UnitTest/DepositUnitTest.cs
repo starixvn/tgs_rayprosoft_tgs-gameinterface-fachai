@@ -68,16 +68,14 @@ public class DepositUnitTest
 
         var client = new GameApiClient(fakeLog, fakeCryptographyUtensil, fakeHttpClient);
 
-        var actual = await client
-            .DepositAsync(
-                apiUrl,
-                agentCode,
-                agentKey,
-                currency,
-                memberAccount,
-                trsId,
-                amount)
-            .ConfigureAwait(false);
+        var actual = await client.DepositAsync(
+            apiUrl: apiUrl,
+            agentCode: agentCode,
+            agentKey: agentKey,
+            currency: currency,
+            memberAccount: memberAccount,
+            trsId: trsId,
+            amount: amount);
 
         Assert.NotNull(actual);
         Assert.Equal(trsId, actual.TrsId);

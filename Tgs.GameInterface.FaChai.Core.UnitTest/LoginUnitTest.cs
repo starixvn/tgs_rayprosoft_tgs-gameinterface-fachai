@@ -64,16 +64,14 @@ public class LoginUnitTest
 
         var client = new GameApiClient(fakeLog, fakeCryptographyUtensil, fakeHttpClient);
 
-        var actual = await client
-            .LoginAsync(
-                apiUrl,
-                agentCode,
-                agentKey,
-                currency,
-                memberAccount,
-                gameID,
-                languageID)
-            .ConfigureAwait(false);
+        var actual = await client.LoginAsync(
+            apiUrl: apiUrl,
+            agentCode: agentCode,
+            agentKey: agentKey,
+            currency: currency,
+            memberAccount: memberAccount,
+            gameId: gameID,
+            languageId: languageID);
 
         Assert.NotNull(actual);
     }
