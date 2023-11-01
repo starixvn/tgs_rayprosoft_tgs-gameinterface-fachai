@@ -264,7 +264,7 @@ internal class GameApiClient : IGameApiClient
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        if (jsonNode["Result"]!.GetValue<int>() is not 0 and not 504 and not 500)
+        if (jsonNode["Result"]!.GetValue<int>() is not 0)
         {
             throw new Exception($"The game provider responded with an error.({jsonNode["Result"]!.GetValue<int>()})");
         }
@@ -294,7 +294,7 @@ internal class GameApiClient : IGameApiClient
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        if (jsonNode["Result"]!.GetValue<int>() != 0)
+        if (jsonNode["Result"]!.GetValue<int>() is not 0 and not 504 and not 500)
         {
             throw new Exception($"The game provider responded with an error.({jsonNode["Result"]!.GetValue<int>()})");
         }
