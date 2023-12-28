@@ -115,7 +115,7 @@ spec:
       volumes:
         - name: appsettings
           configMap:
-            name: configmap-{{ include "game-gameinterface-cards365.fullname" . }}
+            name: configmap-{{ include "game-gameinterface-fachai.fullname" . }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
