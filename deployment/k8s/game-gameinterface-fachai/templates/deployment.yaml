@@ -1,4 +1,4 @@
-apiVersion: apps/v1
+﻿apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "game-gameinterface-fachai.fullname" . }}
@@ -18,7 +18,10 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "game-gameinterface-fachai.selectorLabels" . | nindent 8 }}
+        {{- include "game-gameinterface-fachai.labels" . | nindent 8 }}
+	{{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -40,28 +43,24 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.hostIP
-            - name: POD_IP
-              valueFrom:
-               fieldRef:
-                fieldPath: status.podIP
           volumeMounts:
-            - mountPath: /config/appsettings.json
+            - mountPath: /app/appsettings.Production.json
               name: appsettings
               readOnly: true
               subPath: appsettings.json
           ports:
-            - name: grpc
-              containerPort:  {{ .Values.servicegrpc.port }}
-              protocol: TCP
             - name: http
-              containerPort: 80
+              containerPort: {{ .Values.service.targetPort }}
+              protocol: TCP
+            - name: grpc
+              containerPort:  {{ .Values.service.grpc.targetPort }}
               protocol: TCP
           livenessProbe:
             httpGet:
               path: /healthz
               port: http
             failureThreshold: 5
-            periodSeconds: 5
+            periodSeconds: 60
           startupProbe:
             httpGet:
               path: /healthz
@@ -116,7 +115,7 @@ spec:
       volumes:
         - name: appsettings
           configMap:
-            name: configmap-{{ include "game-gameinterface-fachai.fullname" . }}
+            name: configmap-{{ include "game-gameinterface-cards365.fullname" . }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -8,22 +8,11 @@ using Tgs.GameInterface.FaChai.Core.Models;
 
 namespace Tgs.GameInterface.FaChai.Core;
 
-internal class GameApiClient : IGameApiClient
+internal class GameApiClient(
+    ILogger<GameApiClient> logger,
+    ICryptographyUtensil cryptography,
+    HttpClient client) : IGameApiClient
 {
-    private readonly HttpClient _client;
-    private readonly ICryptographyUtensil _cryptography;
-    private readonly ILogger<GameApiClient> _logger;
-
-    public GameApiClient(
-        ILogger<GameApiClient> logger,
-        ICryptographyUtensil cryptography,
-        HttpClient client)
-    {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _cryptography = cryptography ?? throw new ArgumentNullException(nameof(cryptography));
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-    }
-
     public async ValueTask AddMemberAsync(
         Uri apiUrl,
         string agentCode,
@@ -131,7 +120,7 @@ internal class GameApiClient : IGameApiClient
 
         var records = jsonNode["Records"]?.AsArray();
 
-        if (records is null || !records.Any())
+        if (records is null || records.Count == 0)
         {
             yield break;
         }
@@ -189,7 +178,7 @@ internal class GameApiClient : IGameApiClient
 
         var records = jsonNode["Records"]?.AsArray();
 
-        if (records is null || !records.Any())
+        if (records is null || records.Count == 0)
         {
             yield break;
         }
@@ -425,13 +414,13 @@ internal class GameApiClient : IGameApiClient
         {
             new ("AgentCode",agentCode ),
             new ("Currency", currency),
-            new ("Params",_cryptography.AesEncrypt(parameters, agentKey) ),
-            new ("Sign",_cryptography.Md5Encrypt(parameters) )
+            new ("Params",cryptography.AesEncrypt(parameters, agentKey) ),
+            new ("Sign",cryptography.Md5Encrypt(parameters) )
         };
 
         HttpContent content = new FormUrlEncodedContent(request);
 
-        var httpResponseMessage = await _client.PostAsync(url, content, cancellationToken);
+        var httpResponseMessage = await client.PostAsync(url, content, cancellationToken);
 
         sw.Stop();
 
@@ -456,7 +445,7 @@ internal class GameApiClient : IGameApiClient
             ExecutionTimeMs = (int)sw.ElapsedMilliseconds,
             RecordedOn = DateTimeOffset.UtcNow
         };
-        _logger.LogInformation("{apiLogEvent}", JsonSerializer.Serialize(apiLogEvent));
+        logger.LogInformation("{apiLogEvent}", JsonSerializer.Serialize(apiLogEvent));
 
         _ = httpResponseMessage.EnsureSuccessStatusCode();
 

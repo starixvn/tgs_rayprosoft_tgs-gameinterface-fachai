@@ -4,15 +4,9 @@ using Tgs.GameInterface.FaChai.Protos;
 
 namespace Tgs.GameInterface.FaChai.Client;
 
-internal class GameInterfaceFaChaiClient : IGameInterfaceFaChaiClient
+internal class GameInterfaceFaChaiClient(
+    GameInterfaceFaChai.GameInterfaceFaChaiClient client) : IGameInterfaceFaChaiClient
 {
-    private readonly GameInterfaceFaChai.GameInterfaceFaChaiClient _client;
-
-    public GameInterfaceFaChaiClient(GameInterfaceFaChai.GameInterfaceFaChaiClient client)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-    }
-
     public async ValueTask<string> CheckingServiceAsync(
         string machineName,
         CancellationToken cancellationToken = default)
@@ -22,7 +16,7 @@ internal class GameInterfaceFaChaiClient : IGameInterfaceFaChaiClient
             MachineName = machineName,
         };
 
-        var reply = await _client
+        var reply = await client
             .CheckingServiceAsync(
                 request: request,
                 cancellationToken: cancellationToken)
@@ -39,7 +33,7 @@ internal class GameInterfaceFaChaiClient : IGameInterfaceFaChaiClient
         string playerCode,
         decimal amount,
         CancellationToken cancellationToken = default)
-        => await _client
+        => await client
         .FundInAsync(
             request: new FundRequest
             {
@@ -60,7 +54,7 @@ internal class GameInterfaceFaChaiClient : IGameInterfaceFaChaiClient
         string currency,
         string playerCode,
         decimal amount, CancellationToken cancellationToken = default)
-        => await _client
+        => await client
         .FundOutAsync(
             request: new FundRequest
             {
@@ -82,7 +76,7 @@ internal class GameInterfaceFaChaiClient : IGameInterfaceFaChaiClient
         string trsId,
         CancellationToken cancellationToken = default)
     {
-        var reply = await _client
+        var reply = await client
         .FundStatusAsync(
             request: new FundStatusRequest
             {
@@ -107,7 +101,7 @@ internal class GameInterfaceFaChaiClient : IGameInterfaceFaChaiClient
         DateTimeOffset endDate,
        [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        var reply = await _client
+        var reply = await client
         .GameRecordAsync(
             request: new GameRecordRequest
             {
@@ -144,7 +138,7 @@ internal class GameInterfaceFaChaiClient : IGameInterfaceFaChaiClient
         DateTimeOffset endDate,
        [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        var reply = await _client
+        var reply = await client
         .GameRecordHistoryAsync(
             request: new GameRecordRequest
             {
@@ -182,7 +176,7 @@ internal class GameInterfaceFaChaiClient : IGameInterfaceFaChaiClient
         int languageId,
         CancellationToken cancellationToken = default)
     {
-        var reply = await _client
+        var reply = await client
         .GameUrlAsync(
             request: new GameUrlRequest
             {
@@ -207,7 +201,7 @@ internal class GameInterfaceFaChaiClient : IGameInterfaceFaChaiClient
         string currency,
         string playerCode,
         CancellationToken cancellationToken = default)
-        => await _client
+        => await client
         .PlayerBalanceAsync(
             request: new PlayerBalanceRequest
             {
@@ -227,7 +221,7 @@ internal class GameInterfaceFaChaiClient : IGameInterfaceFaChaiClient
         string currency,
         string playerCode,
         CancellationToken cancellationToken = default)
-        => _ = await _client
+        => _ = await client
         .PlayerCreateAsync(
             request: new PlayerCreateRequest
             {
@@ -247,7 +241,7 @@ internal class GameInterfaceFaChaiClient : IGameInterfaceFaChaiClient
         string currency,
         string playerCode,
         CancellationToken cancellationToken = default)
-        => _ = await _client
+        => _ = await client
         .PlayerLogoutAsync(
             request: new PlayerLogoutRequest
             {

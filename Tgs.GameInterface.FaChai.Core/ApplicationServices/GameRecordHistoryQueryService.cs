@@ -4,20 +4,13 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.FaChai.Core.ApplicationServices;
 
-internal class GameRecordHistoryQueryService : IQueryService<GameRecordHistoryQuery, GameRecordResult>
+internal class GameRecordHistoryQueryService(IGameApiClient client) : IQueryService<GameRecordHistoryQuery, GameRecordResult>
 {
-    private readonly IGameApiClient _client;
-
-    public GameRecordHistoryQueryService(IGameApiClient client)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-    }
-
     public async IAsyncEnumerable<GameRecordResult> QueryAsync(
         GameRecordHistoryQuery query,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        var results = await _client
+        var results = await client
             .GetHistoryRecordListAsync(
                 apiUrl: query.ApiUrl,
                 agentCode: query.AgentCode,

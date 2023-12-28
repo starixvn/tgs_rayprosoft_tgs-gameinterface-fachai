@@ -6,46 +6,21 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.FaChai.GrpcServices
 {
-    public class GameInterfaceFaChaiGrpcService : GameInterfaceFaChai.GameInterfaceFaChaiBase
+    public class GameInterfaceFaChaiGrpcService(
+        ILogger<GameInterfaceFaChaiGrpcService> logger,
+        IGetService<FundInQuery, FundResult> fundInService,
+        IGetService<FundOutQuery, FundResult> fundOutService,
+        IGetService<FundStatusQuery, bool> fundStatusService,
+        IQueryService<GameRecordHistoryQuery, GameRecordResult> gameRecordHistoryService,
+        IQueryService<GameRecordQuery, GameRecordResult> gameRecordService,
+        IGetService<GameUrlQuery, string> gameUrlService,
+        IGetService<PlayerBalanceQuery, PlayerBalanceResult> playerBalanceService,
+        ICommandService<PlayerCreateCommand> playerCreateService,
+        ICommandService<PlayerLogoutCommand> PlayerLogoutService) : GameInterfaceFaChai.GameInterfaceFaChaiBase
     {
-        private readonly IGetService<FundInQuery, FundResult> _fundInService;
-        private readonly IGetService<FundOutQuery, FundResult> _fundOutService;
-        private readonly IGetService<FundStatusQuery, bool> _fundStatusService;
-        private readonly IQueryService<GameRecordHistoryQuery, GameRecordResult> _gameRecordHistoryService;
-        private readonly IQueryService<GameRecordQuery, GameRecordResult> _gameRecordService;
-        private readonly IGetService<GameUrlQuery, string> _gameUrlService;
-        private readonly ILogger<GameInterfaceFaChaiGrpcService> _logger;
-        private readonly IGetService<PlayerBalanceQuery, PlayerBalanceResult> _playerBalanceService;
-        private readonly ICommandService<PlayerCreateCommand> _playerCreateService;
-        private readonly ICommandService<PlayerLogoutCommand> _playerLogoutService;
-
-        public GameInterfaceFaChaiGrpcService(
-            ILogger<GameInterfaceFaChaiGrpcService> logger,
-            IGetService<FundInQuery, FundResult> fundInService,
-            IGetService<FundOutQuery, FundResult> fundOutService,
-            IGetService<FundStatusQuery, bool> fundStatusService,
-            IQueryService<GameRecordHistoryQuery, GameRecordResult> gameRecordHistoryService,
-            IQueryService<GameRecordQuery, GameRecordResult> gameRecordService,
-            IGetService<GameUrlQuery, string> gameUrlService,
-            IGetService<PlayerBalanceQuery, PlayerBalanceResult> playerBalanceService,
-            ICommandService<PlayerCreateCommand> playerCreateService,
-            ICommandService<PlayerLogoutCommand> PlayerLogoutService)
-        {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _fundInService = fundInService ?? throw new ArgumentNullException(nameof(fundInService));
-            _fundOutService = fundOutService ?? throw new ArgumentNullException(nameof(fundOutService));
-            _fundStatusService = fundStatusService ?? throw new ArgumentNullException(nameof(fundStatusService));
-            _gameRecordHistoryService = gameRecordHistoryService ?? throw new ArgumentNullException(nameof(gameRecordHistoryService));
-            _gameRecordService = gameRecordService ?? throw new ArgumentNullException(nameof(gameRecordService));
-            _gameUrlService = gameUrlService ?? throw new ArgumentNullException(nameof(gameUrlService));
-            _playerBalanceService = playerBalanceService ?? throw new ArgumentNullException(nameof(playerBalanceService));
-            _playerCreateService = playerCreateService ?? throw new ArgumentNullException(nameof(playerCreateService));
-            _playerLogoutService = PlayerLogoutService ?? throw new ArgumentNullException(nameof(PlayerLogoutService));
-        }
-
         public override Task<CheckingServiceReply> CheckingService(CheckingServiceRequest request, ServerCallContext context)
         {
-            _logger.LogWarning("LogOn:{logOn} Message: Create a check connection.({machineName})", DateTime.Now.ToString("o"), request.MachineName);
+            logger.LogWarning("LogOn:{logOn} Message: Create a check connection.({machineName})", DateTime.Now.ToString("o"), request.MachineName);
 
             return Task.FromResult(new CheckingServiceReply
             {
@@ -63,7 +38,7 @@ namespace Tgs.GameInterface.FaChai.GrpcServices
                 PlayerCode: request.PlayerCode,
                 Amount: request.Amount);
 
-            var result = await _fundInService
+            var result = await fundInService
                 .GetAsync(
                     query: query,
                     cancellationToken: context.CancellationToken)
@@ -89,7 +64,7 @@ namespace Tgs.GameInterface.FaChai.GrpcServices
                 PlayerCode: request.PlayerCode,
                 Amount: request.Amount);
 
-            var result = await _fundOutService
+            var result = await fundOutService
                 .GetAsync(
                     query: query,
                     cancellationToken: context.CancellationToken)
@@ -114,7 +89,7 @@ namespace Tgs.GameInterface.FaChai.GrpcServices
                 Currency: request.Currency,
                 TrsId: request.TrsId);
 
-            var result = await _fundStatusService
+            var result = await fundStatusService
                 .GetAsync(
                     query: query,
                     cancellationToken: context.CancellationToken)
@@ -136,7 +111,7 @@ namespace Tgs.GameInterface.FaChai.GrpcServices
                 StartDate: request.StartDate.ToDateTimeOffset(),
                 EndDate: request.EndDate.ToDateTimeOffset());
 
-            var results = await _gameRecordService
+            var results = await gameRecordService
                 .QueryAsync(
                     query: query,
                     cancellationToken: context.CancellationToken)
@@ -180,7 +155,7 @@ namespace Tgs.GameInterface.FaChai.GrpcServices
                 StartDate: request.StartDate.ToDateTimeOffset(),
                 EndDate: request.EndDate.ToDateTimeOffset());
 
-            var results = await _gameRecordHistoryService
+            var results = await gameRecordHistoryService
                 .QueryAsync(
                     query: query,
                     cancellationToken: context.CancellationToken)
@@ -225,7 +200,7 @@ namespace Tgs.GameInterface.FaChai.GrpcServices
                 GameId: request.GameId,
                 LanguageId: request.LanguageId);
 
-            var result = await _gameUrlService
+            var result = await gameUrlService
                 .GetAsync(
                     query: query,
                     cancellationToken: context.CancellationToken)
@@ -246,7 +221,7 @@ namespace Tgs.GameInterface.FaChai.GrpcServices
                 Currency: request.Currency,
                 PlayerCode: request.PlayerCode);
 
-            var result = await _playerBalanceService
+            var result = await playerBalanceService
                 .GetAsync(
                     query: query,
                     cancellationToken: context.CancellationToken)
@@ -268,7 +243,7 @@ namespace Tgs.GameInterface.FaChai.GrpcServices
                 Currency: request.Currency,
                 PlayerCode: request.PlayerCode);
 
-            await _playerCreateService
+            await playerCreateService
                 .ExecuteAsync(
                     command: command,
                    cancellationToken: context.CancellationToken)
@@ -289,7 +264,7 @@ namespace Tgs.GameInterface.FaChai.GrpcServices
                 Currency: request.Currency,
                 PlayerCode: request.PlayerCode);
 
-            await _playerLogoutService
+            await PlayerLogoutService
                 .ExecuteAsync(
                     command: command,
                    cancellationToken: context.CancellationToken)
