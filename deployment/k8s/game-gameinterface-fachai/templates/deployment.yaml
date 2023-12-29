@@ -38,11 +38,17 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: OTEL_SERVICE_NAME
-              value: Game-GameInterface-FaChai({{ .Release.Namespace }})
+              value: Game-GameInterface-Fachai({{ .Release.Namespace }})
             - name: NODE_IP
               valueFrom:
                 fieldRef:
                   fieldPath: status.hostIP
+            - name: RELEASE_NAMESPACE
+              value: {{ .Release.Namespace }}
+            - name: POD_IP
+              valueFrom:
+               fieldRef:
+                fieldPath: status.podIP 
           volumeMounts:
             - mountPath: /app/appsettings.Production.json
               name: appsettings
