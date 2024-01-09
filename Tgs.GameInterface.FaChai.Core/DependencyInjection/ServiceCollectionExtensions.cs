@@ -17,6 +17,5 @@ public static class ServiceCollectionExtensions
         .RegisterAllServiceUtilityTypes(
             Assembly.GetExecutingAssembly(),
             ServiceLifetime.Transient)
-        .AddSingleton<ICryptographyUtensil, CryptographyUtensil>()
-        .AddSingleton<ISnowflakeUtensil, SnowflakeUtensil>();
+        .AddSingleton<ICryptographyUtensil, CryptographyUtensil>();
 }

@@ -5,4 +5,4 @@ public record FundStatusViewModel(
     string AgentCode,
     string AgentKey,
     string Currency,
-    string TrsId);
+    string OrderId);

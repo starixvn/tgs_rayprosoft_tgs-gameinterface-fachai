@@ -15,17 +15,16 @@ public class FundStatusGetServiceUnitTest
             AgentCode: "GPICN",
             AgentKey: "EOJC9q31Y7AnPb9i",
             Currency: "CNY",
-            TrsId: "1635165246208741376;");
+            OrderId: "1635165246208741376;");
 
-        _ = fakeGameApiClient
-             .GetSingleBillAsync(
-                 Arg.Is(query.ApiUrl),
-                 Arg.Is(query.AgentCode),
-                 Arg.Is(query.AgentKey),
-                 Arg.Is(query.Currency),
-                 Arg.Is(query.TrsId.ToString()),
-                 Arg.Any<CancellationToken>())
-             .Returns(true);
+        _ = fakeGameApiClient.GetSingleBillAsync(
+            apiUrl: Arg.Is(query.ApiUrl),
+            agentCode: Arg.Is(query.AgentCode),
+            agentKey: Arg.Is(query.AgentKey),
+            currency: Arg.Is(query.Currency),
+            trsId: Arg.Is(query.OrderId),
+            cancellationToken: Arg.Any<CancellationToken>())
+            .Returns(true);
 
         var client = new FundStatusGetService(
             fakeGameApiClient);

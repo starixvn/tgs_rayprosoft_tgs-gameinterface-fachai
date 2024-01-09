@@ -53,7 +53,8 @@ message FundRequest {
 	string agent_key = 3;
 	string currency = 4;
 	string player_code = 5;
-	phoenix.protobuf.DecimalValue amount = 6;
+	string order_id = 6;
+	phoenix.protobuf.DecimalValue amount = 7;
 }
 
 message FundStatusRequest {
@@ -61,7 +62,7 @@ message FundStatusRequest {
 	string agent_code = 2;
 	string agent_key = 3;
 	string currency = 4;
-	string trs_id = 5;
+	string order_id = 5;
 }
 
 message GameUrlRequest {

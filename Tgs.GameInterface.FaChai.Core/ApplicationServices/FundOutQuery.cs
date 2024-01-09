@@ -6,4 +6,5 @@ public record FundOutQuery(
     string AgentKey,
     string Currency,
     string PlayerCode,
+    string OrderId,
     decimal Amount);

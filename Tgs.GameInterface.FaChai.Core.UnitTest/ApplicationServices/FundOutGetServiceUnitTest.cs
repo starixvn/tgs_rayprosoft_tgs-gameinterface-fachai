@@ -10,8 +10,6 @@ public class FundOutGetServiceUnitTest
     [Fact]
     public async Task Normal_Process()
     {
-        var fakeLog = NullLogger<FundOutGetService>.Instance;
-        var fakeSnowflakeUtensil = Substitute.For<ISnowflakeUtensil>();
         var fakeGameApiClient = Substitute.For<IGameApiClient>();
 
         var query = new FundOutQuery(
@@ -20,16 +18,12 @@ public class FundOutGetServiceUnitTest
             AgentKey: "EOJC9q31Y7AnPb9i",
             Currency: "CNY",
             PlayerCode: "4ucmqplxb029",
+            OrderId: "1635165246208741376",
             Amount: 1m);
-
-        var trsId = 1635165246208741376;
-        _ = fakeSnowflakeUtensil
-            .NextId()
-            .Returns(trsId);
 
         var result = new DepositResult(
             BankId: 123456,
-            TrsId: trsId.ToString(),
+            TrsId: query.OrderId,
             Balance: 1,
             Amount: 1m,
             Res: "{}");
@@ -40,20 +34,18 @@ public class FundOutGetServiceUnitTest
                  Arg.Is(query.AgentKey),
                  Arg.Is(query.Currency),
                  Arg.Is(query.PlayerCode),
-                 Arg.Is(trsId.ToString()),
+                 Arg.Is(query.OrderId),
                  Arg.Is(query.Amount),
                  Arg.Any<CancellationToken>())
              .Returns(result);
 
         var client = new FundOutGetService(
-            fakeLog,
-            fakeSnowflakeUtensil,
             fakeGameApiClient);
 
         var actual = await client.GetAsync(
             query);
 
         Assert.NotNull(actual);
-        Assert.Equal(trsId.ToString(), actual.TrsId);
+        Assert.Equal(query.OrderId, actual.TrsId);
     }
 }

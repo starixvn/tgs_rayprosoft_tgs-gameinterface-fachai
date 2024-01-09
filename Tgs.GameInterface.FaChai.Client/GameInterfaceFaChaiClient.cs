@@ -7,9 +7,7 @@ namespace Tgs.GameInterface.FaChai.Client;
 internal class GameInterfaceFaChaiClient(
     GameInterfaceFaChai.GameInterfaceFaChaiClient client) : IGameInterfaceFaChaiClient
 {
-    public async ValueTask<string> CheckingServiceAsync(
-        string machineName,
-        CancellationToken cancellationToken = default)
+    public async ValueTask<string> CheckingServiceAsync(string machineName, CancellationToken cancellationToken = default)
     {
         var request = new CheckingServiceRequest
         {
@@ -25,14 +23,7 @@ internal class GameInterfaceFaChaiClient(
         return reply.MachineName;
     }
 
-    public async ValueTask<FundReply> FundInAsync(
-        Uri apiUrl,
-        string agentCode,
-        string agentKey,
-        string currency,
-        string playerCode,
-        decimal amount,
-        CancellationToken cancellationToken = default)
+    public async ValueTask<FundReply> FundInAsync(Uri apiUrl, string agentCode, string agentKey, string currency, string playerCode, string orderId, decimal amount, CancellationToken cancellationToken = default)
         => await client
         .FundInAsync(
             request: new FundRequest
@@ -42,18 +33,13 @@ internal class GameInterfaceFaChaiClient(
                 AgentKey = agentKey,
                 Currency = currency,
                 PlayerCode = playerCode,
+                OrderId = orderId,
                 Amount = amount,
             },
             cancellationToken: cancellationToken)
         .ConfigureAwait(false);
 
-    public async ValueTask<FundReply> FundOutAsync(
-        Uri apiUrl,
-        string agentCode,
-        string agentKey,
-        string currency,
-        string playerCode,
-        decimal amount, CancellationToken cancellationToken = default)
+    public async ValueTask<FundReply> FundOutAsync(Uri apiUrl, string agentCode, string agentKey, string currency, string playerCode, string orderId, decimal amount, CancellationToken cancellationToken = default)
         => await client
         .FundOutAsync(
             request: new FundRequest
@@ -63,18 +49,13 @@ internal class GameInterfaceFaChaiClient(
                 AgentKey = agentKey,
                 Currency = currency,
                 PlayerCode = playerCode,
+                OrderId = orderId,
                 Amount = amount,
             },
             cancellationToken: cancellationToken)
         .ConfigureAwait(false);
 
-    public async ValueTask<bool> FundStatusAsync(
-        Uri apiUrl,
-        string agentCode,
-        string agentKey,
-        string currency,
-        string trsId,
-        CancellationToken cancellationToken = default)
+    public async ValueTask<bool> FundStatusAsync(Uri apiUrl, string agentCode, string agentKey, string currency, string orderId, CancellationToken cancellationToken = default)
     {
         var reply = await client
         .FundStatusAsync(
@@ -84,7 +65,7 @@ internal class GameInterfaceFaChaiClient(
                 AgentCode = agentCode,
                 AgentKey = agentKey,
                 Currency = currency,
-                TrsId = trsId
+                OrderId = orderId
             },
             cancellationToken: cancellationToken)
         .ConfigureAwait(false);
@@ -92,14 +73,7 @@ internal class GameInterfaceFaChaiClient(
         return reply.State;
     }
 
-    public async IAsyncEnumerable<GameRecordInfo> GameRecordAsync(
-        Uri apiUrl,
-        string agentCode,
-        string agentKey,
-        string currency,
-        DateTimeOffset startDate,
-        DateTimeOffset endDate,
-       [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<GameRecordInfo> GameRecordAsync(Uri apiUrl, string agentCode, string agentKey, string currency, DateTimeOffset startDate, DateTimeOffset endDate, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var reply = await client
         .GameRecordAsync(
@@ -129,14 +103,7 @@ internal class GameInterfaceFaChaiClient(
         }
     }
 
-    public async IAsyncEnumerable<GameRecordInfo> GameRecordHistoryAsync(
-        Uri apiUrl,
-        string agentCode,
-        string agentKey,
-        string currency,
-        DateTimeOffset startDate,
-        DateTimeOffset endDate,
-       [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<GameRecordInfo> GameRecordHistoryAsync(Uri apiUrl, string agentCode, string agentKey, string currency, DateTimeOffset startDate, DateTimeOffset endDate, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var reply = await client
         .GameRecordHistoryAsync(
@@ -166,15 +133,7 @@ internal class GameInterfaceFaChaiClient(
         }
     }
 
-    public async ValueTask<string> GameUrlAsync(
-        Uri apiUrl,
-        string agentCode,
-        string agentKey,
-        string currency,
-        string playerCode,
-        int gameId,
-        int languageId,
-        CancellationToken cancellationToken = default)
+    public async ValueTask<string> GameUrlAsync(Uri apiUrl, string agentCode, string agentKey, string currency, string playerCode, int gameId, int languageId, CancellationToken cancellationToken = default)
     {
         var reply = await client
         .GameUrlAsync(
@@ -194,13 +153,7 @@ internal class GameInterfaceFaChaiClient(
         return reply.GameUrl;
     }
 
-    public async ValueTask<PlayerBalanceReply> PlayerBalanceAsync(
-        Uri apiUrl,
-        string agentCode,
-        string agentKey,
-        string currency,
-        string playerCode,
-        CancellationToken cancellationToken = default)
+    public async ValueTask<PlayerBalanceReply> PlayerBalanceAsync(Uri apiUrl, string agentCode, string agentKey, string currency, string playerCode, CancellationToken cancellationToken = default)
         => await client
         .PlayerBalanceAsync(
             request: new PlayerBalanceRequest
@@ -214,13 +167,7 @@ internal class GameInterfaceFaChaiClient(
             cancellationToken: cancellationToken)
         .ConfigureAwait(false);
 
-    public async ValueTask PlayerCreateAsync(
-        Uri apiUrl,
-        string agentCode,
-        string agentKey,
-        string currency,
-        string playerCode,
-        CancellationToken cancellationToken = default)
+    public async ValueTask PlayerCreateAsync(Uri apiUrl, string agentCode, string agentKey, string currency, string playerCode, CancellationToken cancellationToken = default)
         => _ = await client
         .PlayerCreateAsync(
             request: new PlayerCreateRequest
@@ -234,13 +181,7 @@ internal class GameInterfaceFaChaiClient(
             cancellationToken: cancellationToken)
         .ConfigureAwait(false);
 
-    public async ValueTask PlayerLogoutAsync(
-        Uri apiUrl,
-        string agentCode,
-        string agentKey,
-        string currency,
-        string playerCode,
-        CancellationToken cancellationToken = default)
+    public async ValueTask PlayerLogoutAsync(Uri apiUrl, string agentCode, string agentKey, string currency, string playerCode, CancellationToken cancellationToken = default)
         => _ = await client
         .PlayerLogoutAsync(
             request: new PlayerLogoutRequest

@@ -36,6 +36,7 @@ namespace Tgs.GameInterface.FaChai.GrpcServices
                 AgentKey: request.AgentKey,
                 Currency: request.Currency,
                 PlayerCode: request.PlayerCode,
+                OrderId: request.OrderId,
                 Amount: request.Amount);
 
             var result = await fundInService
@@ -62,6 +63,7 @@ namespace Tgs.GameInterface.FaChai.GrpcServices
                 AgentKey: request.AgentKey,
                 Currency: request.Currency,
                 PlayerCode: request.PlayerCode,
+                OrderId: request.OrderId,
                 Amount: request.Amount);
 
             var result = await fundOutService
@@ -87,7 +89,7 @@ namespace Tgs.GameInterface.FaChai.GrpcServices
                 AgentCode: request.AgentCode,
                 AgentKey: request.AgentKey,
                 Currency: request.Currency,
-                TrsId: request.TrsId);
+                OrderId: request.OrderId);
 
             var result = await fundStatusService
                 .GetAsync(

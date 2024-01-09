@@ -6,4 +6,5 @@ public record FundViewModel(
     string AgentKey,
     string Currency,
     string PlayerCode,
+    string OrderId,
     decimal Amount);

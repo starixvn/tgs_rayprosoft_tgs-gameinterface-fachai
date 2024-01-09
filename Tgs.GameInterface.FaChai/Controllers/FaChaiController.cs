@@ -25,6 +25,7 @@ namespace Tgs.GameInterface.FaChai.Controllers
         ///             "agentKey": "EOJC9q31Y7AnPb9i",
         ///             "currency": "CNY",
         ///             "playerCode": "4ucmqplxb029",
+        ///             "orderId": "1635165954039484416",
         ///             "amount": 1
         ///         }
         /// </remarks>
@@ -39,6 +40,7 @@ namespace Tgs.GameInterface.FaChai.Controllers
                 AgentKey: source.AgentKey,
                 Currency: source.Currency,
                 PlayerCode: source.PlayerCode,
+                OrderId: source.OrderId,
                 Amount: source.Amount);
 
             var result = await service
@@ -71,6 +73,7 @@ namespace Tgs.GameInterface.FaChai.Controllers
         ///             "agentKey": "EOJC9q31Y7AnPb9i",
         ///             "currency": "CNY",
         ///             "playerCode": "4ucmqplxb029",
+        ///             "orderId": "1635165246208741376",
         ///             "amount": 1
         ///         }
         /// </remarks>
@@ -85,6 +88,7 @@ namespace Tgs.GameInterface.FaChai.Controllers
                 AgentKey: source.AgentKey,
                 Currency: source.Currency,
                 PlayerCode: source.PlayerCode,
+                OrderId: source.OrderId,
                 Amount: source.Amount);
 
             var result = await service
@@ -116,7 +120,7 @@ namespace Tgs.GameInterface.FaChai.Controllers
         ///             "agentCode": "GPICN",
         ///             "agentKey": "EOJC9q31Y7AnPb9i",
         ///             "currency": "CNY",
-        ///             "trsId": "1635165954039484416"
+        ///             "orderId": "1635165954039484416"
         ///         }
         /// </remarks>
         [HttpPost("fund/Status", Name = "FundStatus")]
@@ -129,7 +133,7 @@ namespace Tgs.GameInterface.FaChai.Controllers
                 AgentCode: source.AgentCode,
                 AgentKey: source.AgentKey,
                 Currency: source.Currency,
-                TrsId: source.TrsId);
+                OrderId: source.OrderId);
 
             return service.GetAsync(
                 query: query,

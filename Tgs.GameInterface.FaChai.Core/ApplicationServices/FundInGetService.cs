@@ -4,38 +4,33 @@ using Tgs.ServiceUtility;
 namespace Tgs.GameInterface.FaChai.Core.ApplicationServices;
 
 internal class FundInGetService(
-    ILogger<FundInGetService> logger,
-    ISnowflakeUtensil snowflakeUtensil,
     IGameApiClient client) : IGetService<FundInQuery, FundResult>
 {
     public async ValueTask<FundResult> GetAsync(FundInQuery query, CancellationToken cancellationToken = default)
     {
-        var trsId = snowflakeUtensil.NextId();
-        try
+        if (query.OrderId.Length is < 0 or > 30)
         {
-            var result = await client
-                 .WithdrawalAsync(
-                     query.ApiUrl,
-                     query.AgentCode,
-                     query.AgentKey,
-                     query.Currency,
-                     query.PlayerCode,
-                     trsId.ToString(),
-                     query.Amount,
-                     cancellationToken)
-                 .ConfigureAwait(false);
+            throw new ArgumentOutOfRangeException($"The order identification code cannot be longer than 30 characters.({query.OrderId.Length})");
+        }
 
-            return new FundResult(
-                TrsId: trsId.ToString(),
-                BankId: result.BankId,
-                Balance: result.Balance,
-                Amount: result.Amount,
-                Res: result.Res);
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "An exception occurred with this fund.");
-            throw;
-        }
+
+        var result = await client.WithdrawalAsync(
+            apiUrl: query.ApiUrl,
+            agentCode: query.AgentCode,
+            agentKey: query.AgentKey,
+            currency: query.Currency,
+            memberAccount: query.PlayerCode,
+            trsId: query.OrderId,
+            amount: query.Amount,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        return new FundResult(
+            TrsId: query.OrderId,
+            BankId: result.BankId,
+            Balance: result.Balance,
+            Amount: result.Amount,
+            Res: result.Res);
+
     }
 }
