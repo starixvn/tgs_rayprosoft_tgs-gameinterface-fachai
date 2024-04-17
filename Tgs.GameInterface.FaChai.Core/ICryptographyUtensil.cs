@@ -2,9 +2,9 @@
 
 public interface ICryptographyUtensil
 {
-    string AesDecrypt(string source, string key);
+	string AesDecrypt(string source, string key);
 
-    string AesEncrypt(string source, string key);
+	string AesEncrypt(string source, string key);
 
-    string Md5Encrypt(string source);
+	string Md5Encrypt(string source);
 }

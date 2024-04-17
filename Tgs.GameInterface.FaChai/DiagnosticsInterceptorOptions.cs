@@ -4,6 +4,6 @@ namespace Tgs.GameInterface.FaChai;
 
 public class DiagnosticsInterceptorOptions
 {
-    public ActivitySource InterceptorActivitySource { get; set; } =
-        new ActivitySource($"Tgs.GameInterface.FaChai.DiagnosticsInterceptor");
+	public ActivitySource InterceptorActivitySource { get; set; } =
+		new ActivitySource($"Tgs.GameInterface.FaChai.DiagnosticsInterceptor");
 }
