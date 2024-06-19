@@ -193,12 +193,11 @@ public class GetSingleBillUnitTest
 
 		var client = new GameApiClient(fakeLog, fakeCryptographyUtensil, fakeHttpClient);
 
-		_ = await Assert.ThrowsAsync<Exception>(
-			async () => await client.GetSingleBillAsync(
-				apiUrl: apiUrl,
-				agentCode: agentCode,
-				agentKey: agentKey,
-				currency: currency,
-				trsId: trsId));
+		_ = await Assert.ThrowsAsync<Exception>(() => client.GetSingleBillAsync(
+			apiUrl: apiUrl,
+			agentCode: agentCode,
+			agentKey: agentKey,
+			currency: currency,
+			trsId: trsId).AsTask());
 	}
 }
