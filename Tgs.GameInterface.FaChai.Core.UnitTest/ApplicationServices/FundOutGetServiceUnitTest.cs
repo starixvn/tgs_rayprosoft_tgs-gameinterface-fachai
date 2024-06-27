@@ -25,7 +25,7 @@ public class FundOutGetServiceUnitTest
 			TrsId: query.OrderId,
 			Balance: 1,
 			Amount: 1m,
-			Res: "{}");
+			Resp: "{}");
 		_ = fakeGameApiClient
 			 .DepositAsync(
 				 Arg.Is(query.ApiUrl),

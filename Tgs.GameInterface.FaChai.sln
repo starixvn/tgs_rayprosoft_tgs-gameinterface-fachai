@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.FaChai.Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.FaChai.Core.UnitTest", "Tgs.GameInterface.FaChai.Core.UnitTest\Tgs.GameInterface.FaChai.Core.UnitTest.csproj", "{AF226B3E-3FE1-4404-B69D-E9087895FDFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgs.GameInterface.FaChai.Client", "Tgs.GameInterface.FaChai.Client\Tgs.GameInterface.FaChai.Client.csproj", "{8E4833EF-1E0F-43D1-B037-630FBD3C5421}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.FaChai.Client", "Tgs.GameInterface.FaChai.Client\Tgs.GameInterface.FaChai.Client.csproj", "{8E4833EF-1E0F-43D1-B037-630FBD3C5421}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgs.GameInterface.FaChai.Protos", "Tgs.GameInterface.FaChai.Protos\Tgs.GameInterface.FaChai.Protos.csproj", "{0348B6FF-38B0-4087-B47B-3787C39B0855}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{8E4833EF-1E0F-43D1-B037-630FBD3C5421}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E4833EF-1E0F-43D1-B037-630FBD3C5421}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E4833EF-1E0F-43D1-B037-630FBD3C5421}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0348B6FF-38B0-4087-B47B-3787C39B0855}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0348B6FF-38B0-4087-B47B-3787C39B0855}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0348B6FF-38B0-4087-B47B-3787C39B0855}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0348B6FF-38B0-4087-B47B-3787C39B0855}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

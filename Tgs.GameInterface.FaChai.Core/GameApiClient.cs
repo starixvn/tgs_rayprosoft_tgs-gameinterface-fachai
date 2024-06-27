@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Microsoft.Extensions.Logging;
+using Tgs.GameInterface.FaChai.Core.Exceptions;
 using Tgs.GameInterface.FaChai.Core.Extensions;
 using Tgs.GameInterface.FaChai.Core.Models;
 
@@ -13,17 +14,11 @@ internal class GameApiClient(
 	ICryptographyUtensil cryptography,
 	HttpClient client) : IGameApiClient
 {
-	public async ValueTask AddMemberAsync(
-		Uri apiUrl,
-		string agentCode,
-		string agentKey,
-		string currency,
-		string memberAccount,
-		CancellationToken cancellationToken = default)
+	public async ValueTask AddMemberAsync(Uri apiUrl, string agentCode, string agentKey, string currency, string memberAccount, CancellationToken cancellationToken = default)
 	{
-		var parameters = new
+		var parameters = new JsonObject
 		{
-			MemberAccount = memberAccount
+			["MemberAccount"] = memberAccount
 		};
 
 		var jsonNode = await PostAsync(
@@ -32,33 +27,25 @@ internal class GameApiClient(
 			agentCode: agentCode,
 			agentKey: agentKey,
 			currency: currency,
-			parameters: JsonSerializer.Serialize(parameters),
-			logPrefix: "AddMember",
+			parameters: parameters,
+			logPrefix: nameof(AddMemberAsync),
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
 		if (jsonNode["Result"]!.GetValue<int>() is not 0 and not 502)
 		{
-			throw new Exception($"This create player failed.({memberAccount})");
+			throw new GameInterfaceException(jsonNode["Result"]!.GetValue<int>());
 		}
 	}
 
-	public async ValueTask<DepositResult> DepositAsync(
-		Uri apiUrl,
-		string agentCode,
-		string agentKey,
-		string currency,
-		string memberAccount,
-		string trsId,
-		decimal amount,
-		CancellationToken cancellationToken = default)
+	public async ValueTask<DepositResult> DepositAsync(Uri apiUrl, string agentCode, string agentKey, string currency, string memberAccount, string trsId, decimal amount, CancellationToken cancellationToken = default)
 	{
-		var request = new
+		var parameters = new JsonObject
 		{
-			MemberAccount = memberAccount,
-			TrsID = trsId,
-			AllOut = 0,
-			Points = amount
+			["MemberAccount"] = memberAccount,
+			["TrsID"] = trsId,
+			["AllOut"] = 0,
+			["Points"] = amount
 		};
 
 		var jsonNode = await PostAsync(
@@ -67,34 +54,27 @@ internal class GameApiClient(
 			agentCode: agentCode,
 			agentKey: agentKey,
 			currency: currency,
-			parameters: JsonSerializer.Serialize(request),
-			logPrefix: "SetPoints_Deposit",
+			parameters: parameters,
+			logPrefix: nameof(DepositAsync),
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
 		return jsonNode["Result"]!.GetValue<int>() != 0
-			? throw new Exception($"The game provider responded with an error.({jsonNode["Result"]!.GetValue<int>()})")
+			? throw new GameInterfaceException(jsonNode["Result"]!.GetValue<int>())
 			: new DepositResult(
 				BankId: jsonNode["BankID"]!.GetValue<long>(),
 				TrsId: jsonNode["TrsID"]!.GetValue<string>(),
 				Balance: jsonNode["AfterPoint"]!.GetValue<decimal>(),
 				Amount: jsonNode["Points"]!.GetValue<decimal>(),
-				Res: jsonNode.ToJsonString());
+				Resp: jsonNode.ToJsonString());
 	}
 
-	public async IAsyncEnumerable<RecordResult> GetHistoryRecordListAsync(
-		Uri apiUrl,
-		string agentCode,
-		string agentKey,
-		string currency,
-		DateTimeOffset startDate,
-		DateTimeOffset endDate,
-		[EnumeratorCancellation] CancellationToken cancellationToken = default)
+	public async IAsyncEnumerable<RecordResult> GetHistoryRecordListAsync(Uri apiUrl, string agentCode, string agentKey, string currency, DateTimeOffset startDate, DateTimeOffset endDate, [EnumeratorCancellation] CancellationToken cancellationToken = default)
 	{
-		var request = new
+		var parameters = new JsonObject
 		{
-			StartDate = startDate.DatetimeConvertToString(),
-			EndDate = endDate.DatetimeConvertToString()
+			["StartDate"] = startDate.DatetimeConvertToString(),
+			["EndDate"] = endDate.DatetimeConvertToString()
 		};
 
 		var jsonNode = await PostAsync(
@@ -103,14 +83,14 @@ internal class GameApiClient(
 			agentCode: agentCode,
 			agentKey: agentKey,
 			currency: currency,
-			parameters: JsonSerializer.Serialize(request),
-			logPrefix: "GetHistoryRecordList",
+			parameters: parameters,
+			logPrefix: nameof(GetHistoryRecordListAsync),
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
 		if (jsonNode["Result"]!.GetValue<int>() is not 0 and not 227)
 		{
-			throw new Exception($"The game provider responded with an error.({jsonNode["Result"]!.GetValue<int>()})");
+			throw new GameInterfaceException(jsonNode["Result"]!.GetValue<int>());
 		}
 
 		if (jsonNode["Result"]!.GetValue<int>() == 227)
@@ -145,19 +125,58 @@ internal class GameApiClient(
 		}
 	}
 
-	public async IAsyncEnumerable<RecordResult> GetRecordListAsync(
-		Uri apiUrl,
-		string agentCode,
-		string agentKey,
-		string currency,
-		DateTimeOffset startDate,
-		DateTimeOffset endDate,
-	   [EnumeratorCancellation] CancellationToken cancellationToken = default)
+	public async IAsyncEnumerable<string> GetOnlineMemberAsync(Uri apiUrl, string agentCode, string agentKey, string currency, [EnumeratorCancellation] CancellationToken cancellationToken = default)
 	{
-		var request = new
+		var jsonNode = await PostAsync(
+			apiUrl: apiUrl,
+			path: "/GetOnlineMember",
+			agentCode: agentCode,
+			agentKey: agentKey,
+			currency: currency,
+			parameters: new JsonObject(),
+			logPrefix: nameof(SearchMemberAsync),
+			cancellationToken: cancellationToken)
+			.ConfigureAwait(false);
+
+		if (jsonNode["Result"]!.GetValue<int>() != 0)
 		{
-			StartDate = startDate.DatetimeConvertToString(),
-			EndDate = endDate.DatetimeConvertToString()
+			throw new GameInterfaceException(jsonNode["Result"]!.GetValue<int>());
+		}
+
+		var memberList = jsonNode["MemberList"]!.AsArray();
+
+		if (memberList is null || memberList.Count == 0)
+		{
+			yield break;
+		}
+
+		foreach (var member in memberList)
+		{
+			if (member is null)
+			{
+				continue;
+			}
+
+			var values = JsonSerializer.Deserialize<Dictionary<string, long>>(member.ToJsonString());
+
+			if (values is null)
+			{
+				continue;
+			}
+
+			foreach (var value in values)
+			{
+				yield return value.Key;
+			}
+		}
+	}
+
+	public async IAsyncEnumerable<RecordResult> GetRecordListAsync(Uri apiUrl, string agentCode, string agentKey, string currency, DateTimeOffset startDate, DateTimeOffset endDate, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+	{
+		var parameters = new JsonObject
+		{
+			["StartDate"] = startDate.DatetimeConvertToString(),
+			["EndDate"] = endDate.DatetimeConvertToString()
 		};
 
 		var jsonNode = await PostAsync(
@@ -166,14 +185,14 @@ internal class GameApiClient(
 			agentCode: agentCode,
 			agentKey: agentKey,
 			currency: currency,
-			parameters: JsonSerializer.Serialize(request),
-			logPrefix: "GetRecordList",
+			parameters: parameters,
+			logPrefix: nameof(GetRecordListAsync),
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
 		if (jsonNode["Result"]!.GetValue<int>() != 0)
 		{
-			throw new Exception($"The game provider responded with an error.({jsonNode["Result"]!.GetValue<int>()})");
+			throw new GameInterfaceException(jsonNode["Result"]!.GetValue<int>());
 		}
 
 		var records = jsonNode["Records"]?.AsArray();
@@ -203,17 +222,11 @@ internal class GameApiClient(
 		}
 	}
 
-	public async ValueTask<bool> GetSingleBillAsync(
-		Uri apiUrl,
-		string agentCode,
-		string agentKey,
-		string currency,
-		string trsId,
-		CancellationToken cancellationToken = default)
+	public async ValueTask<bool> GetSingleBillAsync(Uri apiUrl, string agentCode, string agentKey, string currency, string trsId, CancellationToken cancellationToken = default)
 	{
-		var parameters = new
+		var parameters = new JsonObject
 		{
-			TrsID = trsId
+			["TrsID"] = trsId
 		};
 
 		var jsonNode = await PostAsync(
@@ -222,25 +235,18 @@ internal class GameApiClient(
 			agentCode: agentCode,
 			agentKey: agentKey,
 			currency: currency,
-			parameters: JsonSerializer.Serialize(parameters),
-			logPrefix: "GetSingleBill",
+			parameters: parameters,
+			logPrefix: nameof(GetSingleBillAsync),
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
 		return jsonNode["Result"]!.GetValue<int>() is not 0 and not 709
-			? throw new Exception($"The game provider responded with an error.({jsonNode["Result"]!.GetValue<int>()})")
+			? throw new GameInterfaceException(jsonNode["Result"]!.GetValue<int>())
 			: jsonNode["Result"]!.GetValue<int>() != 709;
 	}
 
-	public async ValueTask KickoutAllAsync(
-		Uri apiUrl,
-		string agentCode,
-		string agentKey,
-		string currency,
-		CancellationToken cancellationToken = default)
-
+	public async ValueTask KickoutAllAsync(Uri apiUrl, string agentCode, string agentKey, string currency, CancellationToken cancellationToken = default)
 	{
-		var parameters = new { };
 
 		var jsonNode = await PostAsync(
 			apiUrl: apiUrl,
@@ -248,28 +254,22 @@ internal class GameApiClient(
 			agentCode: agentCode,
 			agentKey: agentKey,
 			currency: currency,
-			parameters: JsonSerializer.Serialize(parameters),
-			logPrefix: "KickoutAll",
+			parameters: new JsonObject { },
+			logPrefix: nameof(KickoutAllAsync),
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
 		if (jsonNode["Result"]!.GetValue<int>() is not 0)
 		{
-			throw new Exception($"The game provider responded with an error.({jsonNode["Result"]!.GetValue<int>()})");
+			throw new GameInterfaceException(jsonNode["Result"]!.GetValue<int>());
 		}
 	}
 
-	public async ValueTask KickOutAsync(
-		Uri apiUrl,
-		string agentCode,
-		string agentKey,
-		string currency,
-		string memberAccount,
-		CancellationToken cancellationToken = default)
+	public async ValueTask KickOutAsync(Uri apiUrl, string agentCode, string agentKey, string currency, string memberAccount, CancellationToken cancellationToken = default)
 	{
-		var parameters = new
+		var parameters = new JsonObject
 		{
-			MemberAccount = memberAccount
+			["MemberAccount"] = memberAccount
 		};
 
 		var jsonNode = await PostAsync(
@@ -278,32 +278,24 @@ internal class GameApiClient(
 			agentCode: agentCode,
 			agentKey: agentKey,
 			currency: currency,
-			parameters: JsonSerializer.Serialize(parameters),
-			logPrefix: "KickOut",
+			parameters: parameters,
+			logPrefix: nameof(KickOutAsync),
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
 		if (jsonNode["Result"]!.GetValue<int>() is not 0 and not 504 and not 500)
 		{
-			throw new Exception($"The game provider responded with an error.({jsonNode["Result"]!.GetValue<int>()})");
+			throw new GameInterfaceException(jsonNode["Result"]!.GetValue<int>());
 		}
 	}
 
-	public async ValueTask<string> LoginAsync(
-		Uri apiUrl,
-		string agentCode,
-		string agentKey,
-		string currency,
-		string memberAccount,
-		int gameId,
-		int languageId,
-		CancellationToken cancellationToken = default)
+	public async ValueTask<string> LoginAsync(Uri apiUrl, string agentCode, string agentKey, string currency, string memberAccount, int gameId, int languageId, CancellationToken cancellationToken = default)
 	{
-		var request = new
+		var parameters = new JsonObject
 		{
-			MemberAccount = memberAccount,
-			GameID = gameId,
-			LanguageID = languageId
+			["MemberAccount"] = memberAccount,
+			["GameID"] = gameId,
+			["LanguageID"] = languageId
 		};
 
 		var jsonNode = await PostAsync(
@@ -312,27 +304,21 @@ internal class GameApiClient(
 			agentCode: agentCode,
 			agentKey: agentKey,
 			currency: currency,
-			parameters: JsonSerializer.Serialize(request),
-			logPrefix: "Login",
+			parameters: parameters,
+			logPrefix: nameof(LoginAsync),
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
 		return jsonNode["Result"]!.GetValue<int>() != 0
-			? throw new Exception($"The game provider responded with an error.({jsonNode["Result"]!.GetValue<int>()})")
+			? throw new GameInterfaceException(jsonNode["Result"]!.GetValue<int>())
 			: jsonNode["Url"]!.ToString();
 	}
 
-	public async ValueTask<SearchMemberResult> SearchMemberAsync(
-		Uri apiUrl,
-		string agentCode,
-		string agentKey,
-		string currency,
-		string memberAccount,
-		CancellationToken cancellationToken = default)
+	public async ValueTask<SearchMemberResult> SearchMemberAsync(Uri apiUrl, string agentCode, string agentKey, string currency, string memberAccount, CancellationToken cancellationToken = default)
 	{
-		var request = new
+		var parameters = new JsonObject
 		{
-			MemberAccount = memberAccount
+			["MemberAccount"] = memberAccount
 		};
 
 		var jsonNode = await PostAsync(
@@ -341,14 +327,14 @@ internal class GameApiClient(
 			agentCode: agentCode,
 			agentKey: agentKey,
 			currency: currency,
-			parameters: JsonSerializer.Serialize(request),
-			logPrefix: "SearchMember",
+			parameters: parameters,
+			logPrefix: nameof(SearchMemberAsync),
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
 		return jsonNode["Result"]!.GetValue<int>() != 0
 			? jsonNode["Result"]!.GetValue<int>() != 500
-				? throw new Exception($"The game provider responded with an error.({jsonNode["Result"]!.GetValue<int>()})")
+				? throw new GameInterfaceException(jsonNode["Result"]!.GetValue<int>())
 				: new SearchMemberResult(false, false, 0)
 			: new SearchMemberResult(
 				IsPlayerExist: true,
@@ -356,22 +342,14 @@ internal class GameApiClient(
 				Balance: jsonNode["Points"]!.GetValue<decimal>());
 	}
 
-	public async ValueTask<WithdrawalResult> WithdrawalAsync(
-		Uri apiUrl,
-		string agentCode,
-		string agentKey,
-		string currency,
-		string memberAccount,
-		string trsId,
-		decimal amount,
-		CancellationToken cancellationToken = default)
+	public async ValueTask<WithdrawalResult> WithdrawalAsync(Uri apiUrl, string agentCode, string agentKey, string currency, string memberAccount, string trsId, decimal amount, CancellationToken cancellationToken = default)
 	{
-		var request = new
+		var parameters = new JsonObject
 		{
-			MemberAccount = memberAccount,
-			TrsID = trsId,
-			AllOut = 0,
-			Points = -amount
+			["MemberAccount"] = memberAccount,
+			["TrsID"] = trsId,
+			["AllOut"] = 0,
+			["Points"] = -amount
 		};
 
 		var jsonNode = await PostAsync(
@@ -380,45 +358,37 @@ internal class GameApiClient(
 			agentCode: agentCode,
 			agentKey: agentKey,
 			currency: currency,
-			parameters: JsonSerializer.Serialize(request),
-			logPrefix: "SetPoints_Withdrawal",
+			parameters: parameters,
+			logPrefix: nameof(WithdrawalAsync),
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
 		return jsonNode["Result"]!.GetValue<int>() != 0
-			? throw new Exception($"The game provider responded with an error.({jsonNode["Result"]!.GetValue<int>()})")
+			? throw new GameInterfaceException(jsonNode["Result"]!.GetValue<int>())
 			: new WithdrawalResult(
 				BankId: jsonNode["BankID"]!.GetValue<long>(),
 				TrsId: jsonNode["TrsID"]!.GetValue<string>(),
 				Balance: jsonNode["AfterPoint"]!.GetValue<decimal>(),
 				Amount: jsonNode["Points"]!.GetValue<decimal>(),
-				Res: jsonNode.ToJsonString());
+				Resp: jsonNode.ToJsonString());
 	}
 
-	private async ValueTask<JsonNode> PostAsync(
-		Uri apiUrl,
-		string path,
-		string agentCode,
-		string agentKey,
-		string currency,
-		string parameters,
-		string logPrefix,
-		CancellationToken cancellationToken = default)
+	private async ValueTask<JsonNode> PostAsync(Uri apiUrl, string path, string agentCode, string agentKey, string currency, JsonNode parameters, string logPrefix, CancellationToken cancellationToken = default)
 	{
-		logPrefix = $"{nameof(GameApiClient)}.{logPrefix}".ToLower();
 
-		var sw = Stopwatch.StartNew();
 		var url = new Uri(apiUrl, path);
 
 		var request = new KeyValuePair<string, string>[]
 		{
 			new ("AgentCode",agentCode ),
 			new ("Currency", currency),
-			new ("Params",cryptography.AesEncrypt(parameters, agentKey) ),
-			new ("Sign",cryptography.Md5Encrypt(parameters) )
+			new ("Params",cryptography.AesEncrypt(parameters.ToJsonString(), agentKey) ),
+			new ("Sign",cryptography.Md5Encrypt(parameters.ToJsonString()) )
 		};
 
 		HttpContent content = new FormUrlEncodedContent(request);
+
+		var sw = Stopwatch.StartNew();
 
 		var httpResponseMessage = await client.PostAsync(url, content, cancellationToken).ConfigureAwait(false);
 
@@ -431,7 +401,7 @@ internal class GameApiClient(
 			responseMessage = await sr.ReadToEndAsync(cancellationToken).ConfigureAwait(false) ?? string.Empty;
 		}
 
-		var apiLogEvent = new GameApiLogEvent
+		var apiLogEvent = new
 		{
 			Path = httpResponseMessage.RequestMessage?.RequestUri?.AbsoluteUri.NoLongerThan(512) ?? string.Empty,
 			Method = httpResponseMessage.RequestMessage?.Method.ToString().NoLongerThan(8) ?? string.Empty,

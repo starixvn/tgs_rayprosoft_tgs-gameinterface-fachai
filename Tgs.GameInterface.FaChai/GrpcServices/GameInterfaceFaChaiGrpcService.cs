@@ -15,6 +15,7 @@ public class GameInterfaceFaChaiGrpcService(
 	IQueryService<GameRecordQuery, GameRecordResult> gameRecordService,
 	IGetService<GameUrlQuery, string> gameUrlService,
 	IGetService<PlayerBalanceQuery, PlayerBalanceResult> playerBalanceService,
+	IGetService<PlayerOnlineQuery, bool> playerOnlineService,
 	ICommandService<PlayerCreateCommand> playerCreateService,
 	ICommandService<PlayerLogoutCommand> PlayerLogoutService) : GameInterfaceFaChai.GameInterfaceFaChaiBase
 {
@@ -51,7 +52,7 @@ public class GameInterfaceFaChaiGrpcService(
 			BankId = result.BankId,
 			Balance = result.Balance,
 			Amount = result.Amount,
-			Res = result.Res
+			Resp = result.Resp
 		};
 	}
 
@@ -78,7 +79,7 @@ public class GameInterfaceFaChaiGrpcService(
 			BankId = result.BankId,
 			Balance = result.Balance,
 			Amount = result.Amount,
-			Res = result.Res
+			Resp = result.Resp
 		};
 	}
 
@@ -275,6 +276,27 @@ public class GameInterfaceFaChaiGrpcService(
 		return new BaseReply
 		{
 			State = true
+		};
+	}
+
+	public override async Task<PlayerOnlineReply> PlayerOnline(PlayerOnlineRequest request, ServerCallContext context)
+	{
+		var query = new PlayerOnlineQuery(
+			ApiUrl: new(request.ApiUrl),
+			AgentCode: request.AgentCode,
+			AgentKey: request.AgentKey,
+			Currency: request.Currency,
+			PlayerCode: request.PlayerCode);
+
+		var result = await playerOnlineService
+			.GetAsync(
+				query: query,
+				cancellationToken: context.CancellationToken)
+			.ConfigureAwait(false);
+
+		return new PlayerOnlineReply
+		{
+			Online = result
 		};
 	}
 }

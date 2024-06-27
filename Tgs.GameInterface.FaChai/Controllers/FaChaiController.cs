@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Tgs.GameInterface.FaChai.Core.ApplicationServices;
-using Tgs.GameInterface.FaChai.ViewModels;
 using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.FaChai.Controllers;
@@ -30,32 +29,12 @@ public class FaChaiController : ControllerBase
 	///         }
 	/// </remarks>
 	[HttpPost("fund/in", Name = "FundIn")]
-	public async ValueTask<FundResultViewModel> FundInAsync(
+	public ValueTask<FundResult> FundInAsync(
 		[FromServices] IGetService<FundInQuery, FundResult> service,
-		FundViewModel source)
-	{
-		var query = new FundInQuery(
-			ApiUrl: source.ApiUrl,
-			AgentCode: source.AgentCode,
-			AgentKey: source.AgentKey,
-			Currency: source.Currency,
-			PlayerCode: source.PlayerCode,
-			OrderId: source.OrderId,
-			Amount: source.Amount);
-
-		var result = await service
-			.GetAsync(
-				query: query,
-				cancellationToken: HttpContext.RequestAborted)
-			.ConfigureAwait(false);
-
-		return new FundResultViewModel(
-			TrsId: result.TrsId,
-			BankId: result.BankId,
-			Balance: result.Balance,
-			Amount: result.Amount,
-			Res: result.Res);
-	}
+		FundInQuery source)
+		=> service.GetAsync(
+			query: source,
+			cancellationToken: HttpContext.RequestAborted);
 
 	/// <summary>
 	/// Funds the out asynchronous.
@@ -78,32 +57,12 @@ public class FaChaiController : ControllerBase
 	///         }
 	/// </remarks>
 	[HttpPost("fund/out", Name = "FundOut")]
-	public async ValueTask<FundResultViewModel> FundOutAsync(
+	public ValueTask<FundResult> FundOutAsync(
 		[FromServices] IGetService<FundOutQuery, FundResult> service,
-		FundViewModel source)
-	{
-		var query = new FundOutQuery(
-			ApiUrl: source.ApiUrl,
-			AgentCode: source.AgentCode,
-			AgentKey: source.AgentKey,
-			Currency: source.Currency,
-			PlayerCode: source.PlayerCode,
-			OrderId: source.OrderId,
-			Amount: source.Amount);
-
-		var result = await service
-			.GetAsync(
-				query: query,
-				cancellationToken: HttpContext.RequestAborted)
-			.ConfigureAwait(false);
-
-		return new FundResultViewModel(
-			TrsId: result.TrsId,
-			BankId: result.BankId,
-			Balance: result.Balance,
-			Amount: result.Amount,
-			Res: result.Res);
-	}
+		FundOutQuery source)
+		=> service.GetAsync(
+			query: source,
+			cancellationToken: HttpContext.RequestAborted);
 
 	/// <summary>
 	/// Funds the status asynchronous.
@@ -126,19 +85,10 @@ public class FaChaiController : ControllerBase
 	[HttpPost("fund/Status", Name = "FundStatus")]
 	public ValueTask<bool> FundStatusAsync(
 		[FromServices] IGetService<FundStatusQuery, bool> service,
-		FundStatusViewModel source)
-	{
-		var query = new FundStatusQuery(
-			ApiUrl: source.ApiUrl,
-			AgentCode: source.AgentCode,
-			AgentKey: source.AgentKey,
-			Currency: source.Currency,
-			OrderId: source.OrderId);
-
-		return service.GetAsync(
-			query: query,
+		FundStatusQuery source)
+		=> service.GetAsync(
+			query: source,
 			cancellationToken: HttpContext.RequestAborted);
-	}
 
 	/// <summary>
 	/// Games the record asynchronous.
@@ -161,47 +111,12 @@ public class FaChaiController : ControllerBase
 	///         }
 	/// </remarks>
 	[HttpPost("game/record")]
-	public async IAsyncEnumerable<GameRecordResultViewModel> GameRecordAsync(
+	public IAsyncEnumerable<GameRecordResult> GameRecordAsync(
 		[FromServices] IQueryService<GameRecordQuery, GameRecordResult> service,
-		GameRecordViewModel source)
-	{
-		var query = new GameRecordQuery(
-			ApiUrl: source.ApiUrl,
-			AgentCode: source.AgentCode,
-			AgentKey: source.AgentKey,
-			Currency: source.Currency,
-			StartDate: source.StartDate,
-			EndDate: source.EndDate);
-
-		var results = await service
-			.QueryAsync(
-				query: query,
-				cancellationToken: HttpContext.RequestAborted)
-			.ToArrayAsync(
-				cancellationToken: HttpContext.RequestAborted)
-			.ConfigureAwait(false)
-			?? Enumerable.Empty<GameRecordResult>();
-
-		if (!results.Any())
-		{
-			yield break;
-		}
-
-		foreach (var result in results)
-		{
-			yield return new GameRecordResultViewModel(
-				ExternalRoundId: result.ExternalRoundId,
-				ExternalGameId: result.ExternalGameId,
-				PlayerCode: result.PlayerCode,
-				ExternalCreatedOn: result.ExternalCreatedOn,
-				ExternalClosedOn: result.ExternalClosedOn,
-				Bet: result.Bet,
-				Settle: result.Settle,
-				WinLoss: result.WinLoss,
-				Jppoints: result.Jppoints,
-				AdditionalData: result.AdditionalData);
-		}
-	}
+		GameRecordQuery source)
+		=> service.QueryAsync(
+			query: source,
+			cancellationToken: HttpContext.RequestAborted);
 
 	/// <summary>
 	/// Games the record history asynchronous.
@@ -224,47 +139,12 @@ public class FaChaiController : ControllerBase
 	///         }
 	/// </remarks>
 	[HttpPost("game/record/history")]
-	public async IAsyncEnumerable<GameRecordResultViewModel> GameRecordHistoryAsync(
+	public IAsyncEnumerable<GameRecordResult> GameRecordHistoryAsync(
 		[FromServices] IQueryService<GameRecordHistoryQuery, GameRecordResult> service,
-		GameRecordViewModel source)
-	{
-		var query = new GameRecordHistoryQuery(
-			ApiUrl: source.ApiUrl,
-			AgentCode: source.AgentCode,
-			AgentKey: source.AgentKey,
-			Currency: source.Currency,
-			StartDate: source.StartDate,
-			EndDate: source.EndDate);
-
-		var results = await service
-			.QueryAsync(
-				query: query,
-				cancellationToken: HttpContext.RequestAborted)
-			.ToArrayAsync(
-				cancellationToken: HttpContext.RequestAborted)
-			.ConfigureAwait(false)
-			?? Enumerable.Empty<GameRecordResult>();
-
-		if (!results.Any())
-		{
-			yield break;
-		}
-
-		foreach (var result in results)
-		{
-			yield return new GameRecordResultViewModel(
-				ExternalRoundId: result.ExternalRoundId,
-				ExternalGameId: result.ExternalGameId,
-				PlayerCode: result.PlayerCode,
-				ExternalCreatedOn: result.ExternalCreatedOn,
-				ExternalClosedOn: result.ExternalClosedOn,
-				Bet: result.Bet,
-				Settle: result.Settle,
-				WinLoss: result.WinLoss,
-				Jppoints: result.Jppoints,
-				AdditionalData: result.AdditionalData);
-		}
-	}
+		GameRecordHistoryQuery source)
+		=> service.QueryAsync(
+			query: source,
+			cancellationToken: HttpContext.RequestAborted);
 
 	/// <summary>
 	/// Games the URL asynchronous.
@@ -290,22 +170,10 @@ public class FaChaiController : ControllerBase
 	[HttpPost("gameurl")]
 	public ValueTask<string> GameUrlAsync(
 		[FromServices] IGetService<GameUrlQuery, string> service,
-		GameUrlQueryViewModel source)
-	{
-		var query = new GameUrlQuery(
-			ApiUrl: source.ApiUrl,
-			AgentCode: source.AgentCode,
-			AgentKey: source.AgentKey,
-			Currency: source.Currency,
-			PlayerCode: source.PlayerCode,
-			GameId: source.GameID,
-			LanguageId: source.LanguageID);
-
-		return service
-		 .GetAsync(
-			 query: query,
-			 cancellationToken: HttpContext.RequestAborted);
-	}
+		GameUrlQuery source)
+		=> service.GetAsync(
+			query: source,
+			cancellationToken: HttpContext.RequestAborted);
 
 	/// <summary>
 	/// Players the balance asynchronous.
@@ -327,27 +195,12 @@ public class FaChaiController : ControllerBase
 	///         }
 	/// </remarks>
 	[HttpPost("player/balance", Name = "PlayerBalance")]
-	public async ValueTask<PlayerBalanceResultViewModel> PlayerBalanceAsync(
+	public ValueTask<PlayerBalanceResult> PlayerBalanceAsync(
 		[FromServices] IGetService<PlayerBalanceQuery, PlayerBalanceResult> service,
-		PlayerBalanceViewModel source)
-	{
-		var query = new PlayerBalanceQuery(
-			ApiUrl: source.ApiUrl,
-			AgentCode: source.AgentCode,
-			AgentKey: source.AgentKey,
-			Currency: source.Currency,
-			PlayerCode: source.PlayerCode);
-
-		var result = await service
-				.GetAsync(
-					query: query,
-					cancellationToken: HttpContext.RequestAborted)
-				.ConfigureAwait(false);
-
-		return new PlayerBalanceResultViewModel(
-			result.IsPlayerExist,
-			result.Balance);
-	}
+		PlayerBalanceQuery source)
+		=> service.GetAsync(
+			query: source,
+			cancellationToken: HttpContext.RequestAborted);
 
 	/// <summary>
 	/// Players the create asynchronous.
@@ -371,21 +224,38 @@ public class FaChaiController : ControllerBase
 	[HttpPost("player/create", Name = "PlayerCreate")]
 	public ValueTask PlayerCreateAsync(
 		[FromServices] ICommandService<PlayerCreateCommand> service,
-		PlayerCreateViewModel source)
-	{
-		var command = new PlayerCreateCommand(
-			ApiUrl: source.ApiUrl,
-			AgentCode: source.AgentCode,
-			AgentKey: source.AgentKey,
-			Currency: source.Currency,
-			PlayerCode: source.PlayerCode);
-		return service.ExecuteAsync(
-				command: command,
-				cancellationToken: HttpContext.RequestAborted);
-	}
+		PlayerCreateCommand source)
+		=> service.ExecuteAsync(
+			command: source,
+			cancellationToken: HttpContext.RequestAborted);
 
 	/// <summary>
-	/// Players the kick asynchronous.
+	/// Players the online.
+	/// </summary>
+	/// <param name="service">The service.</param>
+	/// <param name="query">The query.</param>
+	/// <returns></returns>
+	/// <remarks>
+	/// <b>Example</b><br />
+	///
+	///     Post
+	///
+	///         {
+	///             "apiUrl": "http://api.fcg666.net",
+	///             "agentCode": "GPICN",
+	///             "agentKey": "EOJC9q31Y7AnPb9i",
+	///             "currency": "CNY",
+	///             "playerCode": "4ucmqplxb029"
+	///         }
+	/// </remarks>
+	[HttpPost("player/online", Name = "PlayerOnline")]
+	public ValueTask<bool> PlayerOnline(
+		[FromServices] IGetService<PlayerOnlineQuery, bool> service,
+		[FromBody] PlayerOnlineQuery query)
+		=> service.GetAsync(query);
+
+	/// <summary>
+	/// Players the logout asynchronous.
 	/// </summary>
 	/// <param name="service">The service.</param>
 	/// <param name="source">The source.</param>
@@ -403,16 +273,10 @@ public class FaChaiController : ControllerBase
 	///         }
 	/// </remarks>
 	[HttpPost("player/logout", Name = "PlayerLogout")]
-	public ValueTask PlayerKickAsync(
+	public ValueTask PlayerLogoutAsync(
 		[FromServices] ICommandService<PlayerLogoutCommand> service,
-		PlayerLogoutViewModel source)
-		=> service
-			.ExecuteAsync(
-				command: new PlayerLogoutCommand(
-					ApiUrl: source.ApiUrl,
-					AgentCode: source.AgentCode,
-					AgentKey: source.AgentKey,
-					Currency: source.Currency,
-					PlayerCode: source.PlayerCode),
-				cancellationToken: HttpContext.RequestAborted);
+		PlayerLogoutCommand source)
+		=> service.ExecuteAsync(
+			command: source,
+			cancellationToken: HttpContext.RequestAborted);
 }

@@ -20,6 +20,8 @@ public interface IGameInterfaceFaChaiClient
 
 	ValueTask<PlayerBalanceReply> PlayerBalanceAsync(Uri apiUrl, string agentCode, string agentKey, string currency, string playerCode, CancellationToken cancellationToken = default);
 
+	ValueTask<bool> PlayerOnlineAsync(Uri apiUrl, string agentCode, string agentKey, string currency, string playerCode, CancellationToken cancellationToken = default);
+
 	ValueTask PlayerCreateAsync(Uri apiUrl, string agentCode, string agentKey, string currency, string playerCode, CancellationToken cancellationToken = default);
 
 	ValueTask PlayerLogoutAsync(Uri apiUrl, string agentCode, string agentKey, string currency, string playerCode, CancellationToken cancellationToken = default);

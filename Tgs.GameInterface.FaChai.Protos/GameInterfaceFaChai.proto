@@ -5,13 +5,14 @@ import "google/protobuf/timestamp.proto";
 
 option csharp_namespace = "Tgs.GameInterface.FaChai.Protos";
 
-package gameinterfacefachai;
+package GameInterfaceFaChai;
 
 // The greeting service definition.
 service GameInterfaceFaChai {
   // Sends a greeting
   rpc PlayerCreate (PlayerCreateRequest) returns (BaseReply);
   rpc PlayerBalance (PlayerBalanceRequest) returns (PlayerBalanceReply);
+  rpc PlayerOnline (PlayerOnlineRequest) returns (PlayerOnlineReply);
   rpc PlayerLogout (PlayerLogoutRequest) returns (BaseReply);
   rpc FundIn (FundRequest) returns (FundReply);
   rpc FundOut (FundRequest) returns (FundReply);
@@ -32,6 +33,14 @@ message PlayerCreateRequest {
 }
 
 message PlayerBalanceRequest {
+	string api_url = 1;
+	string agent_code = 2;
+	string agent_key = 3;
+	string currency = 4;
+	string player_code = 5;
+}
+
+message PlayerOnlineRequest {
 	string api_url = 1;
 	string agent_code = 2;
 	string agent_key = 3;
@@ -98,12 +107,16 @@ message PlayerBalanceReply {
 	phoenix.protobuf.DecimalValue balance = 2;
 }
 
+message PlayerOnlineReply {
+	bool online  = 1;
+}
+
 message FundReply {
 	string trs_id = 1;
 	int64 bank_id = 2;
 	phoenix.protobuf.DecimalValue balance = 3;
 	phoenix.protobuf.DecimalValue amount = 4;
-	string res = 5;
+	string resp  = 5;
 }
 
 message GameUrlReply{

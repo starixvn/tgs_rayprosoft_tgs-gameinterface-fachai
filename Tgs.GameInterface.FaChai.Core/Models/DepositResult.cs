@@ -5,4 +5,4 @@ public record DepositResult(
 	string TrsId,
 	decimal Balance,
 	decimal Amount,
-	string Res);
+	string Resp);

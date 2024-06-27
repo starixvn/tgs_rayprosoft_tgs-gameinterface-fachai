@@ -3,6 +3,7 @@ using System.Text.Json;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using RichardSzalay.MockHttp;
+using Tgs.GameInterface.FaChai.Core.Exceptions;
 
 namespace Tgs.GameInterface.FaChai.Core.UnitTest;
 
@@ -193,7 +194,7 @@ public class GetSingleBillUnitTest
 
 		var client = new GameApiClient(fakeLog, fakeCryptographyUtensil, fakeHttpClient);
 
-		_ = await Assert.ThrowsAsync<Exception>(() => client.GetSingleBillAsync(
+		_ = await Assert.ThrowsAsync<GameInterfaceException>(() => client.GetSingleBillAsync(
 			apiUrl: apiUrl,
 			agentCode: agentCode,
 			agentKey: agentKey,

@@ -5,4 +5,4 @@ public record FundResult(
 	long BankId,
 	decimal Balance,
 	decimal Amount,
-	string Res);
+	string Resp);
