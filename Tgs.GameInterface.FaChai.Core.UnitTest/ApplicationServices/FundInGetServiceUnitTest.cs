@@ -25,7 +25,7 @@ public class FundInGetServiceUnitTest
 			TrsId: query.OrderId,
 			Balance: 0,
 			Amount: -1m,
-			Res: "{}");
+			Resp: "{}");
 		_ = fakeGameApiClient
 			 .WithdrawalAsync(
 				 Arg.Is(query.ApiUrl),

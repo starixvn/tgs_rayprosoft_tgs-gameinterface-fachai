@@ -194,4 +194,21 @@ internal class GameInterfaceFaChaiClient(
 			},
 			cancellationToken: cancellationToken)
 		.ConfigureAwait(false);
+
+	public async ValueTask<bool> PlayerOnlineAsync(Uri apiUrl, string agentCode, string agentKey, string currency, string playerCode, CancellationToken cancellationToken = default)
+	{
+		var reply = await client.PlayerOnlineAsync(
+			request: new PlayerOnlineRequest
+			{
+				ApiUrl = apiUrl.ToString(),
+				AgentCode = agentCode,
+				AgentKey = agentKey,
+				Currency = currency,
+				PlayerCode = playerCode
+			},
+			cancellationToken: cancellationToken)
+		.ConfigureAwait(false);
+
+		return reply.Online;
+	}
 }

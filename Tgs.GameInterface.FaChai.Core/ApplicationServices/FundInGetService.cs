@@ -28,6 +28,6 @@ internal class FundInGetService(
 			BankId: result.BankId,
 			Balance: result.Balance,
 			Amount: result.Amount,
-			Res: result.Res);
+			Resp: result.Resp);
 	}
 }

@@ -13,10 +13,6 @@
 		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
 		<NoWarn>$(NoWarn);1591;0063</NoWarn>
 	</PropertyGroup>
-
-	<ItemGroup>
-	  <None Remove="Protos\gameinterfacefaChai.proto" />
-	</ItemGroup>
 	
 	<ItemGroup>
 		<PackageReference Include="FluentdForward.OpenTelemetry.MessagePack" Version="0.3.8" />
@@ -39,10 +35,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Tgs.GameInterface.FaChai.Core\Tgs.GameInterface.FaChai.Core.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Protobuf Include="Protos\gameinterfacefachai.proto" />
+		<ProjectReference Include="..\Tgs.GameInterface.FaChai.Protos\Tgs.GameInterface.FaChai.Protos.csproj" />
 	</ItemGroup>
 
 </Project>

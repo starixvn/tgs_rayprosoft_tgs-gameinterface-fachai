@@ -22,5 +22,7 @@ public interface IGameApiClient
 
 	public ValueTask<SearchMemberResult> SearchMemberAsync(Uri apiUrl, string agentCode, string agentKey, string currency, string memberAccount, CancellationToken cancellationToken = default);
 
+	public IAsyncEnumerable<string> GetOnlineMemberAsync(Uri apiUrl, string agentCode, string agentKey, string currency, CancellationToken cancellationToken = default);
+
 	public ValueTask<WithdrawalResult> WithdrawalAsync(Uri apiUrl, string agentCode, string agentKey, string currency, string memberAccount, string trsId, decimal amount, CancellationToken cancellationToken = default);
 }
